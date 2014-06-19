@@ -1,0 +1,27 @@
+{
+	"name": "ilinco xyzning",
+	"main": "core/index.html",
+	"description": "for web dev",
+	"version": "0.1.0",
+	"keywords": [ "ilinco", "linco", "xyzning" ],
+	"window": {
+		"title": "ilinco xyzning",
+		"icon": "icon/icon.png",
+		"toolbar": false,
+		"frame": true,
+		"width": 1000,
+		"height": 700,
+		"position": "mouse",
+		"min_width": 800,
+		"min_height": 600,
+		"show_in_taskbar": true
+	},
+	"webkit": {
+		"plugin": true
+	},
+	"maintainers":[ {
+		"name": "gavinning",
+		"email": "admin@ilinco.com",
+		"web": "http://www.ilinco.com"
+	}]
+}
