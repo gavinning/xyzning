@@ -1,48 +1,92 @@
 'use strict';
 
+var rootPath = process.cwd();
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
 var lib = require('linco.lib/lib');
+var $ = window.$;
 
+// 需要监听的dom对象集合
+var watchElements = [];
+// 重新渲染方法对象
 var render = {};
+// 过滤同一文件重复提交事件
 var prevtime = new Date().getTime();
 var prevFilename = '';
 
-
 var render = {
+	// 自动编译less
 	less: function(source){
-		console.log(source, 111)
-		// exec('lessc ' + source + ' ' + source.replace('less', 'css') + ' -x');
+		var url = path.join(rootPath, '/core/css/home.less');
+		console.log('compile home.less');
+		return exec('lessc ' + url + ' ' + url.replace('less', 'css') + ' -x');
 	},
+	// 重新渲染css
 	css: function(source){
-		console.log(source, 333)
+		return this.reload();
+		// return this.update(source);
 	},
-	js: function(source){
-		console.log(source, 222)
+	// 重新渲染js
+	js: function(source, files){
+		return $.inArray(source, files) !== -1 ?
+			this.reload() : null;
 	},
-	html: function(source){
-		console.log(source)
+	html: function(){
+		this.reload();
+	},
+	// 重新渲染dom媒体对象
+	update: function(source){
+		var el, url, attr, extname;
+
+		extname = path.extname(source);
+
+		switch(extname){
+			case '.css':
+				attr = 'href';
+				break;
+
+			case '.png':
+				attr = 'src';
+				break;
+
+			case '.jpg':
+				attr = 'src';
+				break;
+
+			case '.gif':
+				attr = 'src';
+				break;
+		}
+
+		// 遍历监听对象，查找当前修改对象，并重新渲染
+		watchElements.each(function(i, item){
+			url = item[attr];
+			if(url && path.basename(url).split('?')[0] == source){
+				item[attr] = url.split('?')[0] + '?t=' + Math.random();
+				console.log('render ' + source)
+			}
+		})
+
+
+	},
+	// 重新渲染窗口
+	reload: function(){
+		window.location.reload();
 	}
 }
 
 function reload(source){
-	var $ = window.$;
 	var style = $('link[rel="stylesheet');
 	var js = $('script[src]');
 	var file = stat(source);
 	var files = [];
 
-	$.merge(style,js).each(function(i, item){
+	watchElements = $.merge(style,js);
+
+	watchElements.each(function(i, item){
 		files.push(item.src ? path.basename(item.src) : path.basename(item.href))
 	});
-
-	// fs.watch(file.dirname, function(event, filename){
-	// 	if(filename == file.name){
-	// 		console.log('isModify');
-	// 		window.location.reload();
-	// 	}
-	// });
 
 	watch(file, files);
 }
@@ -55,11 +99,21 @@ function watch(file, files){
 
 		fs.watch(item, function(event, filename){
 			var filetype = path.extname(filename);
+			var now = new Date().getTime();
 
+			// 过滤同一文件重复提交事件
+			if(prevFilename == filename && now - prevtime < 600){
+				return;
+			}
+			prevFilename = filename;
+			prevtime = now;
+
+			// handle main html reload
 			if(filename == file.name){
-				render.html(filename, file.name);
+				render.html();
 			}
 
+			// render media
 			switch(filetype){
 				case '.less':
 					render.less(filename, files);
@@ -85,27 +139,6 @@ function stat(source){
 	file.name = path.basename(source);
 	return file;
 }
-
-function render(source, target){
-	var filetype = path.extname(source);
-
-
-
-	if(filetype == '.less'){
-		console.log(source + ' is Modify')
-	}
-
-	if(filetype == '.css'){
-		console.log(target + ' is Modify')
-	}
-}
-
-
-
-function isRepeat(){
-
-}
-
 
 
 

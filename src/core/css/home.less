@@ -5,13 +5,6 @@
 
 
 
-
-
-
-
-
-
-
 body{
 	overflow: hidden;
 	position: absolute;
@@ -19,6 +12,13 @@ body{
 	height: 100%;
 	left: 0;
 	top: 0;
+	background: #fff;
+	font-family: Menlo, '微软雅黑';
+	cursor: default;
+}
+
+ul,li{
+	list-style: none;
 }
 
 header,nav,aside,footer{
@@ -31,19 +31,28 @@ header,nav,aside,footer{
 	-webkit-box-orient: vertical;
 }
 
-header{
+.header{
 	border-top: 1px solid rgba(150,150,150,1);
 }
 
-nav{
+.nav{
 	display: -webkit-box;
 	height: 60px;
 	border-top: 1px solid #F5F5F4;
 	border-bottom: 1px solid rgba(122,122,122,0.6);
 	background: -webkit-linear-gradient(top, #ECEBE8, #D4D6D5);
+	font-size: 14px;
+	line-height: 60px;
+	padding: 0 12px;
+	color: #523E52;
+	text-shadow: 1px 1px 1px #fff;
 
 	li{
+		margin-right: 12px;
 
+		&.disable{
+			color: #aaa;
+		}
 	}
 }
 
@@ -55,21 +64,93 @@ nav{
 		display: -webkit-box;
 		height: inherit;
 	}
+}
 
-	aside{
-		width: 236px;
-		height: inherit;
-		background: #E2E6EC;
-		border-right: 1px solid #B4B4B4;
-	}
 
-	.main{
-		-webkit-box-flex: 1;
-		height: inherit;
+.aside{
+	width: 236px;
+	height: inherit;
+	overflow: hidden;
+	background: #E2E6EC;
+	border-right: 1px solid #B4B4B4;
+
+	> .inner{
+
 	}
 }
 
-footer{
+.main{
+	-webkit-box-flex: 1;
+	height: inherit;
+}
+
+.footer{
 	height: 23px;
 	border-top: 1px solid #B8B8B8;
 }
+
+.list-folder{
+
+	li{
+		height: 40px;
+		line-height: 40px;
+		padding: 0 12px;
+		border-bottom: 1px solid #ccc;
+		border-top: 1px solid #fff;
+
+		&:first-child{
+			border-top: none;
+		}
+
+		&:last-child{
+			border-bottom: none;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
