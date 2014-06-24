@@ -4,7 +4,7 @@ var rootPath = process.cwd();
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
-var lib = require('linco.lib/lib');
+var lib = require('linco.lab').lib;
 var $ = window.$;
 
 // 需要监听的dom对象集合
