@@ -4,7 +4,8 @@
 
 var lib = require('linco.lab').lib;
 var path = require('path');
-var pm = require(path.resolve('./core/js/lib/pm'));
+var pm = require('./pm');
+var mTpl = require('./mTpl').mTpl;
 
 var Page;
 
@@ -33,7 +34,15 @@ Page = function(){
 Page.prototype = {
 
 	reg: function(){
-		return pm.reg(this);
+		pm.reg(this);
+		pm.cache();
+		pm.stats();
+		return;
+	},
+
+	render: function(id, dom, data){
+		var doc = window.document;
+		doc.getElementById(id).innerHTML = mTpl(dom, data);
 	}
 }
 

@@ -33,7 +33,7 @@ function drag(id, callback, opt){
 		drop: function(e){
 			e.stopPropagation();
 			e.preventDefault();
-			callback ? callback() : "";
+			callback ? callback(e) : "";
 		}
 	}
 
