@@ -11,7 +11,7 @@
 		"frame": true,
 		"width": 1000,
 		"height": 700,
-		"position": "mouse",
+		"position": "center",
 		"min_width": 800,
 		"min_height": 600,
 		"show_in_taskbar": true

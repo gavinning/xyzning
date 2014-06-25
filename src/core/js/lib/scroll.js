@@ -1,9 +1,6 @@
 'use strict';
 
 function scroll(id){
-	console.log(id)
-
-
 	var $ = window.$;
 	var $id = $(id);
 	var id = $id.get(0);

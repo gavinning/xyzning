@@ -1,32 +1,39 @@
 'use strict';
 
+// 初始化首页
+
 (function(){
-	var rootPath = process.cwd();
+	var fs = require('fs');
 	var path = require('path');
-	// var gui = require('nw.gui');
-	// var win = gui.Window.get();
 
-	var reload = require(path.join(rootPath, '/core/js/lib/reload'));
-	var scroll = require(path.join(rootPath, '/core/js/lib/scroll'));
-	var body, page, header, content, footer, aside, nav, main, base;
+	var rootPath = process.cwd();
+	var libPath = path.join(rootPath, '/core/js/lib');
+	var reload = require(path.resolve('./core/js/lib/reload'));
+	var scroll = require(path.resolve('./core/js/lib/scroll'));
+	var pm = require(path.resolve('./core/js/lib/pm'));
+	var drag = require(path.resolve('./core/js/lib/drag'));
 
-	var os  = require('os');
 
-	// global.win = win;
-	base = {};
+	drag(window, function(){
+		alert(1)
+	})
 
-	base.page = {
 
-		init: function(){
-		}
-	}
 
+	// console.log(pm.version)
+
+
+	pm.show('less');
+
+	console.log(pm.page)
+
+
+
+	// 监听项目资源，并根据规则自动渲染
 	reload(path.join(rootPath, '/core/index.html'));
-
+	// 模拟滚动条测试
 	scroll('#asideInner');
 
-
-	// base.page.init();
 })();
 
 
