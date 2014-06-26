@@ -14,6 +14,7 @@ function init(){
 
 	var rootPath = process.cwd();
 	
+	var location = window.location;
 	var home = {};
 	// 全局接口
 	window.home = home;
@@ -25,10 +26,10 @@ function init(){
 	}
 
 
-	// 定义首页id
-	pm.homePage = 'less';
-	// 载入首页
-	pm.home();
+	// 定义首页id，默认为home
+	pm.homePage = 'image';
+	// 初始化首页
+	pm.init();
 
 	// 定义拖拽
 	drag(window, function(e){
@@ -45,6 +46,11 @@ function init(){
 	reload(path.join(rootPath, '/core/index.html'));
 	// 模拟滚动条测试
 	// scroll('#asideInner');
+
+	window.onhashchange = function(){
+		console.log('hash change from init.js line52')
+		pm.hashChange(location.hash.slice(1));
+	}
 
 };
 

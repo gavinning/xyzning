@@ -5,6 +5,7 @@
 	"version": "0.1.0",
 	"keywords": [ "ilinco", "linco", "xyzning" ],
 	"window": {
+		"debug": false,
 		"title": "ilinco xyzning",
 		"icon": "icon/icon.png",
 		"toolbar": true,

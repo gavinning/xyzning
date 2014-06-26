@@ -4,6 +4,7 @@
 
 var path = require('path');
 var pagePath = '../page';
+var location;
 
 var pm;
 
@@ -31,7 +32,7 @@ pm = {
 	// Home页面
 	home: function(){
 		try{
-			this.show(this.homePage);
+			this.setHash(this.homePage);
 		}catch(e){
 			console.error(e.message);
 		}
@@ -46,8 +47,15 @@ pm = {
 		this._prev = null;
 	},
 
-	init: function(id){
+	setHash: function(hash){
+		location.hash = '#' + hash;
+	},
 
+	init: function(id){
+		var hash;
+		location = window.location;
+		hash = location.hash.slice(1);
+		hash ? this.show(hash) : this.home();
 	},
 
 	show: function(id){
@@ -61,9 +69,16 @@ pm = {
 	},
 
 	load: function(id){
-		this.pageHash[id] ?
-			this.pageHash[id].enter() :
-			require(path.join(pagePath, id));
+		if(this.pageHash[id]){
+			this.pageHash[id].enter()
+		}else{
+			try{
+				require(path.join(pagePath, id));
+			}catch(e){
+				console.error(e)
+				return this.home();
+			}
+		}
 	},
 
 	reg: function(page){
@@ -86,8 +101,9 @@ pm = {
 
 	},
 
-	hashChange: function(){
-
+	hashChange: function(hash){
+		if(!hash) return this.home();
+		this.show(hash);
 	},
 
 	pageChange: function(){
