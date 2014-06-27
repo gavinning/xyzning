@@ -152,8 +152,12 @@ header,nav,aside,footer{
 		border: 4px solid #fff;
 		position: relative;
 
-		&.selected{
+		&.current{
 			border-color: #038DFA;
+
+			.iselected{
+				display: block;
+			}
 		}
 	}
 
@@ -163,11 +167,29 @@ header,nav,aside,footer{
 		position: absolute;
 		right: 10px;
 		top: 10px;
+		display: none;
 	}
 
 }
 
+.btn{
+	display: block;
+	width: 100%;
+	height: 40px;
+	line-height: 38px;
+	font-size: 17px;
+	-webkit-box-sizing: border-box;
+	border: none;
+	background: #ddd;
+	outline: 0;
+	color: #000;
+	border-left: 4px solid #fff;
+	border-right: 4px solid #fff;
 
+	&:active{
+		color: #f00;
+	}
+}
 
 
 

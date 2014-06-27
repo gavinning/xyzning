@@ -43,6 +43,27 @@ Page.prototype = {
 	render: function(id, dom, data){
 		var doc = window.document;
 		doc.getElementById(id).innerHTML = mTpl(dom, data);
+	},
+
+	shell: {
+		file: function(src){
+			var gui = window.gui;
+			var shell = gui.Shell;
+			console.log(shell, src)
+			return shell.openItem(src);
+		},
+
+		folder: function(src){
+			var gui = window.gui;
+			var shell = gui.Shell;
+			return shell.showItemInFolder(src);
+		},
+
+		url: function(src){
+			var gui = window.gui;
+			var shell = gui.Shell;
+			return shell.openExternal(src);
+		}
 	}
 }
 

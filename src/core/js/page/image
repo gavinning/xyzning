@@ -5,11 +5,14 @@
 var path = require('path');
 var lib = require('linco.lab').lib;
 var Page = require('../lib/page');
+var LoadImage = require('../lib/loadimage');
 
 var imgReg = /.png|.jpg|.gif/g;
 var page = new Page;
+var loadImage = new LoadImage('/Users/iLinco/Pictures/rosi', 50);
 
 var selectImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAe1BMVEUAAAD///////////////////////////////////////////////////////////////8blfv///+23f5jt/whmPsdlvvK5/5Hqvyu2f4qnPs6pPyj1f2Cxf1bs/z0+v/////j8v9tvPxVsPyTzf13wf3T6v7a7v7r9v8SOWehAAAAEXRSTlMAT2fmjwUnF3TWWJTZvL27CNRr2pIAAAHTSURBVEjHpVZpk4IwDO0qyOGxwysUKIfj7f//hSsFCaVQ1vF9cBhJSPJempQZ8EJnv8YL670TemwBnh9AQ+B7NnMHL/CqLmSSyKKuOF7Yzrm4fmMdi2gAETc+vjtlvwkAnkUGshzYbUz7HyCNo0nEKfAztl8BeRLNQOTAyrAvIwvKtwflc46sOGtZbej7thh95e4OebSIHLs3uz5SsewgUvidvgDxOcNr3fwCrebbpYQy4NEmte0CZFb74glUnaOnKuBWe/noOeSqigDxQq1Ik64WBCojscD/Q76dm5xCe0YV8CwGWoTMQWUjFMBl6O6wPWoLoUe9yWr8sjVURFHLCUJPwFX7A2sGKMuyp4KQ3DHSVAIMUI8pDL0Fh/GV3oHkJFyBkxzFVA6yr09T8AYcs7HqgCpaIdYNLkSoXjTRWgGnon91BG5kSbQOhcuBe9LFHhFKwg1bI0kBLgZPBGoNaj76LsUiUPNp7Z21mV+7agjU3nSAiJuzSSgdIDqixD4pYpxtzxwCJUCaE2gIjMeM4DNjkMYM87Uek3x6jCf9IGNu8L9RGbifDuNPx/0XC+XDlUVLcWZ+1LQUx2s3X1i7Xy325avD95cTuv4c2uvPYer68webMIGKNytpEAAAAABJRU5ErkJggg==';
+
 
 page.extend({
 	name: "images",
@@ -21,6 +24,7 @@ page.extend({
 
 	enter: function(){
 		var main, aside, lessFolder, ul;
+		var listImage, ulImage, getMoreImage;
 		// 如果需要页面需要reload
 		// window下的子方法获取要定义在enter方法内
 		var doc = window.document;
@@ -39,24 +43,30 @@ page.extend({
 		lessFolder = $('#lessFolder');
 		ul = lessFolder.find('ul');
 
+
 		function init(){
-			loadImage()
+			renderImage()
 
 			// 监听图片click事件
 			main.delegate('li', 'click', function(){
 				var li = $(this);
 
-				if(li.hasClass('selected')){
-					li.removeClass('selected');
+				if(li.hasClass('current')){
+					li.removeClass('current');
+					// li.find('.iselected').remove();
 				}else{
-					li.addClass('selected').siblings('.selected').removeClass('selected');
+					li.addClass('current').siblings('.current').removeClass('current');
+					li.find('.iselected').length == 0 ?
+						li.append('<img class="iselected" src="'+selectImg+'">'):"";
 				}
 
-				if(li.find('.iselected').length > 0){
-					li.find('.iselected').remove();
-				}else{
-					li.append('<img class="iselected" src="'+selectImg+'">')
-				}
+				// if(li.find('.iselected').length > 0){
+				// 	li.find('.iselected').remove();
+				// 	li.removeClass('selected');
+				// }else{
+				// 	li.append('<img class="iselected" src="'+selectImg+'">');
+				// 	li.addClass('selected');
+				// }
 			})
 
 			// 预览图片
@@ -70,10 +80,14 @@ page.extend({
 				// 监听空格键
 				if(e.keyCode == 32){
 					// 判断是否有图片被选中
-					li = main.find('li.selected');
+					li = main.find('li.current');
 
 					if(li.length == 1){
 						src = li.attr('path');
+
+						_this.shell.file(src)
+						return false;
+
 						url += '?imgurl='+src;
 						
 						// 如果不存在预览窗口则创建
@@ -149,26 +163,46 @@ page.extend({
 			return win;
 		}
 
-		function loadImage(){
-			var src;
-			var file;
-			var li = ul.find('li');
-			var imgs = [];
+		// 初次渲染列表
+		function renderImage(){
+			// var imgs = loadImage.more();
 
-			if(li.length>0){
-				src = li.eq(0).attr('path');
-				file = lib.dir(src).file;
-				file.forEach(function(item){
-					if(path.extname(item).match(imgReg)){
-						imgs.push(item);
-					}
-				})
-			}
+			// console.log(imgs)
 
 			// 渲染main
-			_this.render('mainInner', _this.dom.main, {list: imgs});
+			_this.render('mainInner', _this.dom.main, {list: []});
+
+			listImage = $('#listImage');
+			ulImage = listImage.find('ul');
+			getMoreImage = listImage.find('#getMoreImage');
+
+			getMoreImage.click(function(){
+				renderMoreImage();
+			})
+
+			renderMoreImage();
 		}
 
+		// 加载更多图片
+		function renderMoreImage(){
+			var imgs = loadImage.more();
+			var Image = window.Image;
+
+			imgs.forEach(function(item){
+				var img = new Image();
+				img.src = item;
+				img.onload = function(){
+					addImage({path: item})
+				}
+			})
+		}
+
+		// 加载图片方法
+		function addImage(file){
+			ulImage.append('<li path="'+file.path+'" style="background-image: url('+file.path+')"></li>')
+		}
+
+		// 添加文件夹方法
 		function add(file){
 			ul.append('<li path="'+file.path+'">'+file.name+'</li>')
 		}
@@ -184,6 +218,7 @@ page.extend({
 			})
 		})
 
+		// fire init
 		init();
 	},
 
@@ -202,12 +237,13 @@ page.extend({
 				'</div>',
 
 		main: ''+
-				'<div class="list-images">'+
+				'<div id="listImage" class="list-images">'+
 				'	<ul>'+
 				'	<%for(var i=0, len=list.length;i<len; i++){%>'+
-				'		<li path="<%=list[i]%>" style="background-image: url(<%=list[i]%>)"></li>'+
+				'		<li path="<%=list[i]%>" style="background-image: url(<%=encodeURI(list[i])%>)"></li>'+
 				'	<%}%>'+
 				'	</ul>'+
+				'	<button id="getMoreImage" class="btn">查看更多</button>'+
 				'</div>'
 	},
 
@@ -215,8 +251,8 @@ page.extend({
 		aside: {
 			list: [
 				{
-					name: 'test',
-					path: '/Users/gavinning/Pictures/test'
+					name: 'wallpaper',
+					path: '/Users/iLinco/Pictures/rosi'
 				}
 			]
 		}
