@@ -6,11 +6,10 @@ var path = require('path');
 var lib = require('linco.lab').lib;
 var Page = require('../lib/page');
 
-var home = window.home;
-var $ = window.$;
 var imgReg = /.png|.jpg|.gif/g;
-
 var page = new Page;
+
+var selectImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAe1BMVEUAAAD///////////////////////////////////////////////////////////////8blfv///+23f5jt/whmPsdlvvK5/5Hqvyu2f4qnPs6pPyj1f2Cxf1bs/z0+v/////j8v9tvPxVsPyTzf13wf3T6v7a7v7r9v8SOWehAAAAEXRSTlMAT2fmjwUnF3TWWJTZvL27CNRr2pIAAAHTSURBVEjHpVZpk4IwDO0qyOGxwysUKIfj7f//hSsFCaVQ1vF9cBhJSPJempQZ8EJnv8YL670TemwBnh9AQ+B7NnMHL/CqLmSSyKKuOF7Yzrm4fmMdi2gAETc+vjtlvwkAnkUGshzYbUz7HyCNo0nEKfAztl8BeRLNQOTAyrAvIwvKtwflc46sOGtZbej7thh95e4OebSIHLs3uz5SsewgUvidvgDxOcNr3fwCrebbpYQy4NEmte0CZFb74glUnaOnKuBWe/noOeSqigDxQq1Ik64WBCojscD/Q76dm5xCe0YV8CwGWoTMQWUjFMBl6O6wPWoLoUe9yWr8sjVURFHLCUJPwFX7A2sGKMuyp4KQ3DHSVAIMUI8pDL0Fh/GV3oHkJFyBkxzFVA6yr09T8AYcs7HqgCpaIdYNLkSoXjTRWgGnon91BG5kSbQOhcuBe9LFHhFKwg1bI0kBLgZPBGoNaj76LsUiUPNp7Z21mV+7agjU3nSAiJuzSSgdIDqixD4pYpxtzxwCJUCaE2gIjMeM4DNjkMYM87Uek3x6jCf9IGNu8L9RGbifDuNPx/0XC+XDlUVLcWZ+1LQUx2s3X1i7Xy325avD95cTuv4c2uvPYer68webMIGKNytpEAAAAABJRU5ErkJggg==';
 
 page.extend({
 	name: "images",
@@ -22,37 +21,152 @@ page.extend({
 
 	enter: function(){
 		var main, aside, lessFolder, ul;
+		// 如果需要页面需要reload
+		// window下的子方法获取要定义在enter方法内
+		var doc = window.document;
+		var $ = window.$;
+		var home = window.home;
+		var _this = this;
 
 		// 载入页面
 		console.log('enter ' + this.id);
 
-		// 渲染页面
+		// 渲染aside
 		this.render('asideInner', this.dom.aside, this.data.aside);
 
-		main = $('#main');
+		main = $('#mainInner');
 		aside = $('#asideInner');
 		lessFolder = $('#lessFolder');
 		ul = lessFolder.find('ul');
 
 		function init(){
-			// loadImage()
+			loadImage()
+
+			// 监听图片click事件
+			main.delegate('li', 'click', function(){
+				var li = $(this);
+
+				if(li.hasClass('selected')){
+					li.removeClass('selected');
+				}else{
+					li.addClass('selected').siblings('.selected').removeClass('selected');
+				}
+
+				if(li.find('.iselected').length > 0){
+					li.find('.iselected').remove();
+				}else{
+					li.append('<img class="iselected" src="'+selectImg+'">')
+				}
+			})
+
+			// 预览图片
+			doc.onkeypress = function(e){
+				var li, src;
+				var url = 'image.html';
+				var imageDom;
+				var img;
+				var win;
+
+				// 监听空格键
+				if(e.keyCode == 32){
+					// 判断是否有图片被选中
+					li = main.find('li.selected');
+
+					if(li.length == 1){
+						src = li.attr('path');
+						url += '?imgurl='+src;
+						
+						// 如果不存在预览窗口则创建
+						if(!win){
+							img = new window.Image();
+							img.src = src;
+							img.onload = function(){
+								win = new View(url, {width: img.width, height: img.height});
+							}
+						}else{
+							// 如果已存在预览窗口则激活
+							win.focus();
+							// 打开新的图片
+							imageDom = win.window.document.getElementById('image');
+							if(imageDom){
+								imageDom.src = src;
+							}
+						}
+
+						return false;
+					}
+				}
+			}
+		}
+
+		// 封装新建窗口方法
+		function View(url, opt){
+			var gui = window.gui;
+			var win;
+			// 默认窗口参数
+			var def = {
+				position: 'center',
+				width: 800,
+				height: 600,
+				focus: true,
+				toolbar: true,
+				frame: true
+			};
+			// 合并参数
+			opt = lib.extend(def, opt);
+
+			// 新建窗口
+			win = gui.Window.get(
+				window.open(url)
+			);
+			// win = gui.Window.open(url, opt);
+
+			// 设置大小
+			win.resizeTo(opt.width, opt.height);
+
+			// 激活预览窗口
+			win.focus();
+			win.setPosition('center')
+
+			// 定义新窗口事件监听
+			win.on('close', function(){
+				this.hide();
+				if(win != null)
+					win.close(true)
+				this.close(true);
+			})
+			win.on('closed', function() {
+				win = null;
+			});
+			win.on('focus', function(){
+				console.log('is focus')
+				console.log(win.window.location)
+			})
+			win.on('blur', function(){
+				console.log('is blur')
+			})
+
+			return win;
 		}
 
 		function loadImage(){
 			var src;
 			var file;
 			var li = ul.find('li');
+			var imgs = [];
 
 			if(li.length>0){
 				src = li.eq(0).attr('path');
 				file = lib.dir(src).file;
 				file.forEach(function(item){
-					console.log(item)
 					if(path.extname(item).match(imgReg)){
-						main.append('<img src="'+item+'" width="200">')
+						imgs.push(item);
 					}
 				})
 			}
+
+			// 渲染main
+			_this.render('mainInner', _this.dom.main, {list: imgs});
 		}
 
 		function add(file){
@@ -85,6 +199,15 @@ page.extend({
 				'		<li class="selected" path="<%=list[i].path%>"><%=list[i].name%></li>'+
 				'	<%}%>'+
 				'	</ul>'+
+				'</div>',
+
+		main: ''+
+				'<div class="list-images">'+
+				'	<ul>'+
+				'	<%for(var i=0, len=list.length;i<len; i++){%>'+
+				'		<li path="<%=list[i]%>" style="background-image: url(<%=list[i]%>)"></li>'+
+				'	<%}%>'+
+				'	</ul>'+
 				'</div>'
 	},
 
@@ -92,8 +215,8 @@ page.extend({
 		aside: {
 			list: [
 				{
-					name: 'Pictures',
-					path: '/Users/gavinning/Pictures'
+					name: 'test',
+					path: '/Users/gavinning/Pictures/test'
 				}
 			]
 		}

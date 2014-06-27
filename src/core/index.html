@@ -30,7 +30,7 @@
 			</div>
 		</aside>
 		<div id="main" class="main">
-
+			<div id="mainInner" class="inner"></div>
 		</div>
 	</div>
 	<footer id="footer" class="footer"></footer>
@@ -38,6 +38,7 @@
 <script src="js/lib/jquery.min.js"></script>
 <script>
 var path = require('path');
+window.gui = require('nw.gui');
 require(path.resolve('./core/js/init'))();
 </script>
 </body>

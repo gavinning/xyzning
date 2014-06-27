@@ -15,11 +15,12 @@ body{
 	font-family: Menlo, '微软雅黑';
 	cursor: default;
 }
-
 ul,li{
 	list-style: none;
 }
-
+img{
+	display: block;
+}
 header,nav,aside,footer{
 	display: block;
 }
@@ -31,7 +32,9 @@ header,nav,aside,footer{
 }
 
 .header{
-	border-top: 1px solid rgba(150,150,150,1);
+	/*border-top: 1px solid rgba(150,150,150,1);*/
+	-webkit-app-region: drag;
+	border-radius: 4px 4px 0 0;
 }
 
 .nav{
@@ -88,6 +91,18 @@ header,nav,aside,footer{
 .main{
 	-webkit-box-flex: 1;
 	height: inherit;
+	overflow: hidden;
+	position: relative;
+
+	> .inner{
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
 }
 
 .footer{
@@ -117,6 +132,42 @@ header,nav,aside,footer{
 		}
 	}
 }
+
+.list-images{
+	padding: 4px;
+
+	ul{
+		overflow: hidden;
+	}
+
+	li{
+		width: 200px;
+		height: 300px;
+		float: left;
+		display: -webkit-box;
+		-webkit-box-align: center;
+		-webkit-box-pack: center;
+		background-size: cover;
+		background-position: center top;
+		border: 4px solid #fff;
+		position: relative;
+
+		&.selected{
+			border-color: #038DFA;
+		}
+	}
+
+	.iselected{
+		width: 30px;
+		height: 30px;
+		position: absolute;
+		right: 10px;
+		top: 10px;
+	}
+
+}
+
+
 
 
 
