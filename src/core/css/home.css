@@ -39,4 +39,5 @@ header,nav,aside,footer{display:block}
 .list-images img{-webkit-transform:translate3d(0, 0, 0)}
 .btn{display:block;width:100%;height:40px;line-height:38px;font-size:17px;-webkit-box-sizing:border-box;border:none;background:#ddd;outline:0;color:#000;border-left:4px solid #fff;border-right:4px solid #fff}.btn:active{color:#f00}
 #imageRightAside{width:160px;height:100%;background-color:#eee;position:fixed;right:0}
-.list-drag li{height:60px;border-bottom:1px solid #ddd;border-top:1px solid #fff;line-height:60px;text-align:center}
+.list-drag li{height:60px;border-bottom:1px solid #ddd;border-top:1px solid #fff;line-height:60px;text-align:center;transition:all 200ms ease 100ms}.list-drag li.dragover{font-size:20px;color:#fff;background:#0888ff}
+.list-drag li.droped{transition:all 600ms ease 100ms}

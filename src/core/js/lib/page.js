@@ -49,7 +49,6 @@ Page.prototype = {
 		file: function(src){
 			var gui = window.gui;
 			var shell = gui.Shell;
-			console.log(shell, src)
 			return shell.openItem(src);
 		},
 

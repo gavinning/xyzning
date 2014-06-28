@@ -4,16 +4,18 @@
 
 var fs = require('fs');
 var path = require('path');
+var exec = require('child_process').exec;
 var lib = require('linco.lab').lib;
-var Page = require('../lib/page');
 var LoadImage = require('../lib/loadimage');
-
-var imgReg = /.png|.jpg|.gif/g;
+var Page = require('../lib/page');
 var page = new Page;
-var loadImage = new LoadImage('/Users/iLinco/Pictures/rosi', 50);
+
+var dragTargetFolder = "/Volumes/Mobile/cate";
+var sourceFolder = "/Volumes/Mobile/aitushuo";
+
+var loadImage = new LoadImage(sourceFolder, 50);
 
 var selectImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAe1BMVEUAAAD///////////////////////////////////////////////////////////////8blfv///+23f5jt/whmPsdlvvK5/5Hqvyu2f4qnPs6pPyj1f2Cxf1bs/z0+v/////j8v9tvPxVsPyTzf13wf3T6v7a7v7r9v8SOWehAAAAEXRSTlMAT2fmjwUnF3TWWJTZvL27CNRr2pIAAAHTSURBVEjHpVZpk4IwDO0qyOGxwysUKIfj7f//hSsFCaVQ1vF9cBhJSPJempQZ8EJnv8YL670TemwBnh9AQ+B7NnMHL/CqLmSSyKKuOF7Yzrm4fmMdi2gAETc+vjtlvwkAnkUGshzYbUz7HyCNo0nEKfAztl8BeRLNQOTAyrAvIwvKtwflc46sOGtZbej7thh95e4OebSIHLs3uz5SsewgUvidvgDxOcNr3fwCrebbpYQy4NEmte0CZFb74glUnaOnKuBWe/noOeSqigDxQq1Ik64WBCojscD/Q76dm5xCe0YV8CwGWoTMQWUjFMBl6O6wPWoLoUe9yWr8sjVURFHLCUJPwFX7A2sGKMuyp4KQ3DHSVAIMUI8pDL0Fh/GV3oHkJFyBkxzFVA6yr09T8AYcs7HqgCpaIdYNLkSoXjTRWgGnon91BG5kSbQOhcuBe9LFHhFKwg1bI0kBLgZPBGoNaj76LsUiUPNp7Z21mV+7agjU3nSAiJuzSSgdIDqixD4pYpxtzxwCJUCaE2gIjMeM4DNjkMYM87Uek3x6jCf9IGNu8L9RGbifDuNPx/0XC+XDlUVLcWZ+1LQUx2s3X1i7Xy325avD95cTuv4c2uvPYer68webMIGKNytpEAAAAABJRU5ErkJggg==';
-
 
 page.extend({
 	name: "images",
@@ -63,13 +65,6 @@ page.extend({
 					}
 				}
 
-				// if(li.find('.iselected').length > 0){
-				// 	li.find('.iselected').remove();
-				// 	li.removeClass('selected');
-				// }else{
-				// 	li.append('<img class="iselected" src="'+selectImg+'">');
-				// 	li.addClass('selected');
-				// }
 			})
 
 			// 预览图片
@@ -177,7 +172,6 @@ page.extend({
 			})
 
 			renderMoreImage();
-			dragListFolder()
 		}
 
 		// 加载更多图片
@@ -196,7 +190,15 @@ page.extend({
 
 		// 加载图片方法
 		function addImage(file){
-			ulImage.append('<li draggable="true" path="'+file.path+'" style="background-image: url('+file.path+')"></li>')
+			var src = file.path;
+
+			// 转义路径中的特殊字符
+			file.path.match(/\'/g) ?
+				file.path = file.path.replace(/\'/g, '\\\'') : "";
+			file.path.match(/\(|\)/g) ?
+				file.path = file.path.replace(/\(/g, '\\\(').replace(/\)/g, '\\\)') : "";
+
+			ulImage.append('<li draggable="true" path="'+src+'" style="background-image: url('+file.path+')"></li>')
 		}
 
 		// 添加文件夹方法
@@ -218,20 +220,86 @@ page.extend({
 		function dragListFolder(){
 			var imageListDrag = $('#imageListDrag');
 			var ul = imageListDrag.find('ul');
-			var url = "/Users/iLinco/Pictures/test2/";
 			var folder = [];
+			var draged, target, src, dirpath, dirname;
 
-			console.log(ul)
+			listImage = $('#listImage');
+			ulImage = listImage.find('ul');
 
-			fs.readdir(url, function(e, arr){
+			fs.readdir(dragTargetFolder, function(e, arr){
 				arr.forEach(function(item){
-					var src = path.join(url, item)
+					var src = path.join(dragTargetFolder, item)
 					if(lib.isDir(src)){
 						ul.append('<li path="'+src+'">'+item+'</li>')
 					}
 				})
 			})
+
+			// 监听拖拽事件
+			ulImage.get(0).addEventListener('dragstart', function(e){
+				// e.stopPropagation();
+				// e.preventDefault();
+				// console.log(e.target)
+				draged = e.target;
+			}, false)
+
+			ul.get(0).addEventListener('dragover', function(e){
+				e.stopPropagation();
+				e.preventDefault();
+				$(e.target).removeClass('droped').addClass('dragover');
+			}, false)
+
+			ul.get(0).addEventListener('dragleave', function(e){
+				e.stopPropagation();
+				e.preventDefault();
+				$(e.target).removeClass('dragover');
+			}, false)
+
+			ul.get(0).addEventListener('drop', function(e){
+				e.stopPropagation();
+				e.preventDefault();
+				$(e.target).addClass('droped').removeClass('dragover');
+
+				// 图片真实路径
+				src = $(draged).attr('path');
+				// 图片文件夹路径
+				dirpath = path.dirname(src);
+				// 图片文件夹名称
+				dirname = path.basename(dirpath);
+				target = $(e.target).attr('path');
+				target = path.join(target, dirname);
+
+				// console.log(src)
+				// console.log(dirpath)
+				// console.log(dirname)
+				// console.log(target)
+
+				moveFolder(dirpath, target, draged);
+
+			}, false)
 		}
+		dragListFolder();
+
+
+		function moveFolder(source, target, el){
+			console.log(source, target)
+			el.remove();
+			exec('mv ' + source + ' ' + target, function(){
+				console.log(arguments)
+			});
+		}
+
+		function dropImage(){
+			var ul;
+			listImage = $('#listImage');
+			ulImage = listImage.find('ul');
+			ul = ulImage.get(0);
+
+			// ul.addEventListener('drag')
+
+		}
+		// dropImage();
+
 
 		// fire init
 		init();
@@ -259,8 +327,8 @@ page.extend({
 		aside: {
 			list: [
 				{
-					name: 'wallpaper',
-					path: '/Users/iLinco/Pictures/rosi'
+					name: 'aitushuo',
+					path: '/Volumes/Mobile/aitushuo'
 				}
 			]
 		}

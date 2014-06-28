@@ -215,6 +215,17 @@ header,nav,aside,footer{
 		border-top: 1px solid #fff;
 		line-height: 60px;
 		text-align: center;
+		transition: all 200ms ease 100ms;
+
+		&.dragover{
+			font-size: 20px;
+			color: #fff;
+			background: #0888FF;
+		}
+
+		&.droped{
+			transition: all 600ms ease 100ms;
+		}
 	}
 }
 
