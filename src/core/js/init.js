@@ -45,7 +45,7 @@ function init(){
 	// 监听项目资源，并根据规则自动渲染
 	reload(path.join(rootPath, '/core/index.html'));
 	// 模拟滚动条测试
-	// scroll('#asideInner');
+	// scroll('#mainInner');
 
 	window.onhashchange = function(){
 		console.log('hash change from init.js line52')

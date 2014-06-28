@@ -2,6 +2,7 @@
 
 // 页面实例
 
+var fs = require('fs');
 var path = require('path');
 var lib = require('linco.lab').lib;
 var Page = require('../lib/page');
@@ -51,13 +52,15 @@ page.extend({
 			main.delegate('li', 'click', function(){
 				var li = $(this);
 
-				if(li.hasClass('current')){
-					li.removeClass('current');
-					// li.find('.iselected').remove();
-				}else{
-					li.addClass('current').siblings('.current').removeClass('current');
-					li.find('.iselected').length == 0 ?
-						li.append('<img class="iselected" src="'+selectImg+'">'):"";
+				if(li.parents('#listImage').length > 0){
+					if(li.hasClass('current')){
+						li.removeClass('current');
+						// li.find('.iselected').remove();
+					}else{
+						li.addClass('current').siblings('.current').removeClass('current');
+						li.find('.iselected').length == 0 ?
+							li.append('<img class="iselected" src="'+selectImg+'">'):"";
+					}
 				}
 
 				// if(li.find('.iselected').length > 0){
@@ -165,13 +168,6 @@ page.extend({
 
 		// 初次渲染列表
 		function renderImage(){
-			// var imgs = loadImage.more();
-
-			// console.log(imgs)
-
-			// 渲染main
-			_this.render('mainInner', _this.dom.main, {list: []});
-
 			listImage = $('#listImage');
 			ulImage = listImage.find('ul');
 			getMoreImage = listImage.find('#getMoreImage');
@@ -181,6 +177,7 @@ page.extend({
 			})
 
 			renderMoreImage();
+			dragListFolder()
 		}
 
 		// 加载更多图片
@@ -199,7 +196,7 @@ page.extend({
 
 		// 加载图片方法
 		function addImage(file){
-			ulImage.append('<li path="'+file.path+'" style="background-image: url('+file.path+')"></li>')
+			ulImage.append('<li draggable="true" path="'+file.path+'" style="background-image: url('+file.path+')"></li>')
 		}
 
 		// 添加文件夹方法
@@ -217,6 +214,24 @@ page.extend({
 				}
 			})
 		})
+
+		function dragListFolder(){
+			var imageListDrag = $('#imageListDrag');
+			var ul = imageListDrag.find('ul');
+			var url = "/Users/iLinco/Pictures/test2/";
+			var folder = [];
+
+			console.log(ul)
+
+			fs.readdir(url, function(e, arr){
+				arr.forEach(function(item){
+					var src = path.join(url, item)
+					if(lib.isDir(src)){
+						ul.append('<li path="'+src+'">'+item+'</li>')
+					}
+				})
+			})
+		}
 
 		// fire init
 		init();
@@ -236,15 +251,8 @@ page.extend({
 				'	</ul>'+
 				'</div>',
 
-		main: ''+
-				'<div id="listImage" class="list-images">'+
-				'	<ul>'+
-				'	<%for(var i=0, len=list.length;i<len; i++){%>'+
-				'		<li path="<%=list[i]%>" style="background-image: url(<%=encodeURI(list[i])%>)"></li>'+
-				'	<%}%>'+
-				'	</ul>'+
-				'	<button id="getMoreImage" class="btn">查看更多</button>'+
-				'</div>'
+		main: ''
+
 	},
 
 	data: {

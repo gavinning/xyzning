@@ -102,6 +102,7 @@ header,nav,aside,footer{
 		height: 100%;
 		overflow-x: hidden;
 		overflow-y: auto;
+		display: -webkit-box;
 	}
 }
 
@@ -135,12 +136,15 @@ header,nav,aside,footer{
 
 .list-images{
 	padding: 4px;
+	-webkit-transform: translate3d(0,0,0);
+	-webkit-box-flex: 1;
 
 	ul{
 		overflow: hidden;
 	}
 
 	li{
+		-webkit-transform: translate3d(0,0,0);
 		width: 200px;
 		height: 300px;
 		float: left;
@@ -170,6 +174,10 @@ header,nav,aside,footer{
 		display: none;
 	}
 
+	img{
+		-webkit-transform: translate3d(0,0,0);
+	}
+
 }
 
 .btn{
@@ -191,6 +199,24 @@ header,nav,aside,footer{
 	}
 }
 
+#imageRightAside{
+	width: 160px;
+	height: 100%;
+	background-color: #eee;
+	position: fixed;
+	right: 0;
+}
+
+.list-drag {
+
+	li{
+		height: 60px;
+		border-bottom: 1px solid #ddd;
+		border-top: 1px solid #fff;
+		line-height: 60px;
+		text-align: center;
+	}
+}
 
 
 

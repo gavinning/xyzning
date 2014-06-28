@@ -10,7 +10,7 @@
 		"icon": "icon/icon.png",
 		"toolbar": true,
 		"frame": true,
-		"width": 1285,
+		"width": 1450,
 		"height": 800,
 		"position": "center",
 		"min_width": 800,
