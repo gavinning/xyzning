@@ -6,7 +6,6 @@ var path = require('path');
 var lib = require('linco.lab').lib;
 var Page = require('../lib/page');
 
-var home = window.home;
 var $ = window.$;
 
 var page = new Page;
@@ -20,32 +19,12 @@ page.extend({
 	},
 
 	enter: function(){
-		var aside, lessFolder, ul;
-
 		// 载入页面
 		console.log('enter ' + this.id);
 
 		// 渲染页面
-		this.render('asideInner', this.dom.aside, this.data.aside);
+		// this.render('asideInner', this.dom.aside, this.data.aside);
 
-		aside = $('#asideInner');
-		lessFolder = $('#lessFolder');
-		ul = lessFolder.find('ul');
-
-		function add(file){
-			ul.append('<li path="'+file.path+'">'+file.name+'</li>')
-		}
-
-		// 监听drag事件
-		home.drag(this.id, function(e){
-			var files = e.dataTransfer.files;
-
-			lib.each(files, function(i, item){
-				if(lib.isDir(item.path)){
-					add(item);
-				}
-			})
-		})
 	},
 
 	leave: function(){

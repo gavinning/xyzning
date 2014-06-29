@@ -11,19 +11,9 @@ function init(){
 	var scroll = require('./lib/scroll');
 	var drag = require('./lib/drag');
 	var pm = require('./lib/pm');
-
 	var rootPath = process.cwd();
 	
 	var location = window.location;
-	var home = {};
-	// 全局接口
-	window.home = home;
-
-	// 拖拽接口
-	home.dragHash = {};
-	home.drag = function(id, callback){
-		return this.dragHash[id] = callback;
-	}
 
 
 	// 定义首页id，默认为home
@@ -33,13 +23,7 @@ function init(){
 
 	// 定义拖拽
 	drag(window, function(e){
-		// console.log(e.dataTransfer.files)
-
-		lib.each(home.dragHash, function(key, value){
-			if(pm.page.id == key){
-				value(e);
-			}
-		})
+		pm.page.drag(e.dataTransfer.files, e.target, e)
 	});
 
 	// 监听项目资源，并根据规则自动渲染

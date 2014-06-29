@@ -47,10 +47,12 @@ pm = {
 		this._prev = null;
 	},
 
+	// 变更hash
 	setHash: function(hash){
 		location.hash = '#' + hash;
 	},
 
+	// 页面初始化
 	init: function(id){
 		var hash;
 		location = window.location;
@@ -58,16 +60,19 @@ pm = {
 		hash ? this.show(hash) : this.home();
 	},
 
+	// 虚拟页切换
 	show: function(id){
 		this.leave();
 		this.load(id);
 	},
 
+	// 离开虚拟页
 	leave: function(){
 		this.page ? this.page.leave() : "";
 		this._prev = this.page;
 	},
 
+	// 加载虚拟页
 	load: function(id){
 		if(this.pageHash[id]){
 			this.pageHash[id].enter()
@@ -81,6 +86,7 @@ pm = {
 		}
 	},
 
+	// 虚拟页注册
 	reg: function(page){
 		if(!this.pageHash[page.id]){
 			this.pageHash[page.id] = page;
@@ -93,19 +99,18 @@ pm = {
 		this.page.enter();
 	},
 
+	// 处理缓存
 	cache: function(){
 
 	},
 
-	stats: function(){
-
-	},
-
+	// 处理hash变更
 	hashChange: function(hash){
 		if(!hash) return this.home();
 		this.show(hash);
 	},
 
+	// 处理页面变更
 	pageChange: function(){
 
 	},

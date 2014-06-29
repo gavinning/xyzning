@@ -6,14 +6,12 @@ var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
 var lib = require('linco.lab').lib;
-var LoadImage = require('../lib/loadimage');
+var loadImage, LoadImage = require('../lib/loadimage');
 var Page = require('../lib/page');
 var page = new Page;
 
-var dragTargetFolder = "/Volumes/Mobile/cate";
-var sourceFolder = "/Volumes/Mobile/aitushuo";
+var dragTargetFolder = "/Volumes/Mobile/handling/cate";
 
-var loadImage = new LoadImage(sourceFolder, 50);
 
 var selectImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAe1BMVEUAAAD///////////////////////////////////////////////////////////////8blfv///+23f5jt/whmPsdlvvK5/5Hqvyu2f4qnPs6pPyj1f2Cxf1bs/z0+v/////j8v9tvPxVsPyTzf13wf3T6v7a7v7r9v8SOWehAAAAEXRSTlMAT2fmjwUnF3TWWJTZvL27CNRr2pIAAAHTSURBVEjHpVZpk4IwDO0qyOGxwysUKIfj7f//hSsFCaVQ1vF9cBhJSPJempQZ8EJnv8YL670TemwBnh9AQ+B7NnMHL/CqLmSSyKKuOF7Yzrm4fmMdi2gAETc+vjtlvwkAnkUGshzYbUz7HyCNo0nEKfAztl8BeRLNQOTAyrAvIwvKtwflc46sOGtZbej7thh95e4OebSIHLs3uz5SsewgUvidvgDxOcNr3fwCrebbpYQy4NEmte0CZFb74glUnaOnKuBWe/noOeSqigDxQq1Ik64WBCojscD/Q76dm5xCe0YV8CwGWoTMQWUjFMBl6O6wPWoLoUe9yWr8sjVURFHLCUJPwFX7A2sGKMuyp4KQ3DHSVAIMUI8pDL0Fh/GV3oHkJFyBkxzFVA6yr09T8AYcs7HqgCpaIdYNLkSoXjTRWgGnon91BG5kSbQOhcuBe9LFHhFKwg1bI0kBLgZPBGoNaj76LsUiUPNp7Z21mV+7agjU3nSAiJuzSSgdIDqixD4pYpxtzxwCJUCaE2gIjMeM4DNjkMYM87Uek3x6jCf9IGNu8L9RGbifDuNPx/0XC+XDlUVLcWZ+1LQUx2s3X1i7Xy325avD95cTuv4c2uvPYer68webMIGKNytpEAAAAABJRU5ErkJggg==';
 
@@ -26,89 +24,77 @@ page.extend({
 	},
 
 	enter: function(){
-		var main, aside, lessFolder, ul;
-		var listImage, ulImage, getMoreImage;
 		// 如果需要页面需要reload
 		// window下的子方法获取要定义在enter方法内
 		var doc = window.document;
 		var $ = window.$;
-		var home = window.home;
 		var _this = this;
 
 		// 载入页面
 		console.log('enter ' + this.id);
 
-		// 渲染aside
-		this.render('asideInner', this.dom.aside, this.data.aside);
-
-		main = $('#mainInner');
-		aside = $('#asideInner');
-		lessFolder = $('#lessFolder');
-		ul = lessFolder.find('ul');
-
 
 		function init(){
-			renderImage()
+			var listImage = $('#listImage');
+			var listFolder = $('#listFolder');
 
 			// 监听图片click事件
-			main.delegate('li', 'click', function(){
+			listImage.delegate('li', 'click', function(){
 				var li = $(this);
 
-				if(li.parents('#listImage').length > 0){
-					if(li.hasClass('current')){
-						li.removeClass('current');
-						// li.find('.iselected').remove();
-					}else{
-						li.addClass('current').siblings('.current').removeClass('current');
-						li.find('.iselected').length == 0 ?
-							li.append('<img class="iselected" src="'+selectImg+'">'):"";
-					}
+				if(li.hasClass('current')){
+					li.removeClass('current');
+					// li.find('.iselected').remove();
+				}else{
+					li.addClass('current').siblings('.current').removeClass('current');
+					li.find('.iselected').length == 0 ?
+						li.append('<img class="iselected" src="'+selectImg+'">'):"";
 				}
 
 			})
 
+			// 监听图片dblclick事件
+			listImage.delegate('li', 'dblclick', function(){
+				var li = $(this);
+				var src = li.attr('path');
+				// console.log(e)
+				_this.shell.folder(path.dirname(src))
+			})
+
+			listFolder.delegate('li', 'click', function(){
+				var li = $(this);
+				var source = li.attr('path');
+
+				if(li.hasClass('selected')){
+					return;
+				}else{
+					li.addClass('selected').siblings('.selected').removeClass('selected');
+					renderImage(source)
+				}
+
+			// 如果存在文件夹列表加载第一个文件夹
+			}).find('li').eq(0).click();
+
 			// 预览图片
 			doc.onkeypress = function(e){
 				var li, src;
-				var url = 'image.html';
-				var imageDom;
-				var img;
-				var win;
 
 				// 监听空格键
 				if(e.keyCode == 32){
 					// 判断是否有图片被选中
-					li = main.find('li.current');
+					li = listImage.find('li.current');
 
 					if(li.length == 1){
 						src = li.attr('path');
-
 						_this.shell.file(src)
-						return false;
-
-						url += '?imgurl='+src;
-						
-						// 如果不存在预览窗口则创建
-						if(!win){
-							img = new window.Image();
-							img.src = src;
-							img.onload = function(){
-								win = new View(url, {width: img.width, height: img.height});
-							}
-						}else{
-							// 如果已存在预览窗口则激活
-							win.focus();
-							// 打开新的图片
-							imageDom = win.window.document.getElementById('image');
-							if(imageDom){
-								imageDom.src = src;
-							}
-						}
-
-						return false;
 					}
+					// 阻止空格默认事件
+					return false;
 				}
 			}
+
+			// 初始化图集拖拽
+			dragListFolder();
 		}
 
 		// 封装新建窗口方法
@@ -161,70 +147,67 @@ page.extend({
 			return win;
 		}
 
-		// 初次渲染列表
-		function renderImage(){
-			listImage = $('#listImage');
-			ulImage = listImage.find('ul');
-			getMoreImage = listImage.find('#getMoreImage');
+		// 渲染图集列表
+		function renderImage(source){
+			var getMoreImage = $('#getMoreImage');
+			var ulImage = $('#listImage').find('ul');
+			var imgCount = 20;
+
+			loadImage = new LoadImage(source, imgCount, [], new RegExp('123.jpg', 'g')); //
+
+			// reset list-image
+			ulImage.html('');
 
 			getMoreImage.click(function(){
-				renderMoreImage();
+				renderMoreImage(imgCount);
 			})
 
-			renderMoreImage();
+			renderMoreImage(imgCount);
 		}
 
 		// 加载更多图片
-		function renderMoreImage(){
+		function renderMoreImage(imgCount){
 			var imgs = loadImage.more();
 			var Image = window.Image;
+			var getMoreImage = $('#getMoreImage');
 
-			imgs.forEach(function(item){
-				var img = new Image();
-				img.src = item;
-				img.onload = function(){
-					addImage({path: item})
-				}
-			})
+			if(imgs.length > 0){
+
+				imgs.forEach(function(item){
+					var img = new Image();
+					img.src = item;
+					img.onload = function(){
+						addImage({path: item})
+					}
+				})
+			}
+
+			if(imgs.length == imgCount){
+				getMoreImage.show();
+			}
+
+			if(imgs.length < imgCount){
+				getMoreImage.hide();
+			}
 		}
 
 		// 加载图片方法
 		function addImage(file){
 			var src = file.path;
+			var ulImage = $('#listImage').find('ul');
 
-			// 转义路径中的特殊字符
-			file.path.match(/\'/g) ?
-				file.path = file.path.replace(/\'/g, '\\\'') : "";
-			file.path.match(/\(|\)/g) ?
-				file.path = file.path.replace(/\(/g, '\\\(').replace(/\)/g, '\\\)') : "";
-
-			ulImage.append('<li draggable="true" path="'+src+'" style="background-image: url('+file.path+')"></li>')
+			ulImage.append('<li draggable="true" path="'+src+'" style="background-image: url(\''+file.path+'\')"></li>')
 		}
 
-		// 添加文件夹方法
-		function add(file){
-			ul.append('<li path="'+file.path+'">'+file.name+'</li>')
-		}
-
-		// 监听drag事件
-		home.drag(this.id, function(e){
-			var files = e.dataTransfer.files;
-
-			lib.each(files, function(i, item){
-				if(lib.isDir(item.path)){
-					add(item);
-				}
-			})
-		})
-
+		// 初始化图集拖拽
 		function dragListFolder(){
 			var imageListDrag = $('#imageListDrag');
 			var ul = imageListDrag.find('ul');
 			var folder = [];
 			var draged, target, src, dirpath, dirname;
 
-			listImage = $('#listImage');
-			ulImage = listImage.find('ul');
+			var listImage = $('#listImage');
+			var ulImage = listImage.find('ul');
 
 			fs.readdir(dragTargetFolder, function(e, arr){
 				arr.forEach(function(item){
@@ -278,27 +261,13 @@ page.extend({
 
 			}, false)
 		}
-		dragListFolder();
-
 
 		function moveFolder(source, target, el){
-			console.log(source, target)
 			el.remove();
 			exec('mv ' + source + ' ' + target, function(){
 				console.log(arguments)
 			});
 		}
-
-		function dropImage(){
-			var ul;
-			listImage = $('#listImage');
-			ulImage = listImage.find('ul');
-			ul = ulImage.get(0);
-
-			// ul.addEventListener('drag')
-
-		}
-		// dropImage();
 
 
 		// fire init
@@ -321,17 +290,6 @@ page.extend({
 
 		main: ''
 
-	},
-
-	data: {
-		aside: {
-			list: [
-				{
-					name: 'aitushuo',
-					path: '/Volumes/Mobile/aitushuo'
-				}
-			]
-		}
 	},
 
 	ready: function(){
