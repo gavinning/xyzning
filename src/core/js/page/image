@@ -191,6 +191,26 @@ page.extend({
 			}
 		}
 
+		// 渲染拖动目的地列表
+		function renderList(dir){
+			var listImage = $('#listImage');
+			var ulImage = listImage.find('ul');
+			var imageListDrag = $('#imageListDrag');
+			var ul = imageListDrag.find('ul');
+
+			ul.html('');
+
+			fs.readdir(dir, function(e, arr){
+				if(e) return console.log(e, e.message)
+				arr.forEach(function(item){
+					var src = path.join(dir, item)
+					if(lib.isDir(src)){
+						ul.append('<li path="'+src+'">'+item+'</li>')
+					}
+				})
+			});
+		}
+
 		// 加载图片方法
 		function addImage(file){
 			var src = file.path;
@@ -209,15 +229,17 @@ page.extend({
 			var listImage = $('#listImage');
 			var ulImage = listImage.find('ul');
 
-			fs.readdir(dragTargetFolder, function(e, arr){
-				if(e) return console.log(e, e.message)
-				arr.forEach(function(item){
-					var src = path.join(dragTargetFolder, item)
-					if(lib.isDir(src)){
-						ul.append('<li path="'+src+'">'+item+'</li>')
-					}
-				})
-			})
+			// fs.readdir(dragTargetFolder, function(e, arr){
+			// 	if(e) return console.log(e, e.message)
+			// 	arr.forEach(function(item){
+			// 		var src = path.join(dragTargetFolder, item)
+			// 		if(lib.isDir(src)){
+			// 			ul.append('<li path="'+src+'">'+item+'</li>')
+			// 		}
+			// 	})
+			// });
+
+			renderList(dragTargetFolder);
 
 			// 监听拖拽事件
 			ulImage.get(0).addEventListener('dragstart', function(e){
@@ -244,21 +266,33 @@ page.extend({
 				e.preventDefault();
 				$(e.target).addClass('droped').removeClass('dragover');
 
-				// 图片真实路径
-				src = $(draged).attr('path');
-				// 图片文件夹路径
-				dirpath = path.dirname(src);
-				// 图片文件夹名称
-				dirname = path.basename(dirpath);
-				target = $(e.target).attr('path');
-				target = path.join(target, dirname);
+				console.log(draged, e.dataTransfer.files)
 
-				// console.log(src)
-				// console.log(dirpath)
-				// console.log(dirname)
-				// console.log(target)
+				// 拖拽分类图集
+				if(draged && draged.tagName == 'LI'){
 
-				moveFolder(dirpath, target, draged);
+					// 图片真实路径
+					src = $(draged).attr('path');
+					// 图片文件夹路径
+					dirpath = path.dirname(src);
+					// 图片文件夹名称
+					dirname = path.basename(dirpath);
+					target = $(e.target).attr('path');
+					target = path.join(target, dirname);
+
+					// console.log(src)
+					// console.log(dirpath)
+					// console.log(dirname)
+					// console.log(target)
+
+					moveFolder(dirpath, target, draged);
+				}
+
+				// 重置拖拽目的地文件夹
+				if(e.dataTransfer.files.length > 0){
+					renderList(e.dataTransfer.files[0].path)
+				}
+
 
 			}, false)
 		}
