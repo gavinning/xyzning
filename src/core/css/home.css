@@ -29,7 +29,7 @@ header,nav,aside,footer{display:block}
 .content{display:-webkit-box;-webkit-box-flex:1}.content>.inner{display:-webkit-box;height:inherit}
 .aside{width:236px;height:inherit;overflow:hidden;background:#e2e6ec;border-right:1px solid #b4b4b4;position:relative}.aside>.inner{position:absolute;left:0;top:0;width:100%;height:100%;overflow-x:hidden;overflow-y:auto}
 .main{-webkit-box-flex:1;height:inherit;overflow:hidden;position:relative}.main>.inner{position:absolute;left:0;top:0;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;display:-webkit-box}
-.footer{height:23px;border-top:1px solid #b8b8b8}
+.footer{height:23px;border-top:1px solid #b8b8b8;display:-webkit-box}
 .list-folder li{height:40px;line-height:40px;padding:0 12px;border-bottom:1px solid #ccc;border-top:1px solid #fff}.list-folder li:first-child{border-top:none}
 .list-folder li:last-child{border-bottom:none}
 .list-folder li.selected{background:rgba(0,0,0,0.1)}
@@ -40,5 +40,6 @@ header,nav,aside,footer{display:block}
 .list-images img{-webkit-transform:translate3d(0, 0, 0)}
 .btn{display:block;width:100%;height:40px;line-height:38px;font-size:17px;-webkit-box-sizing:border-box;border:none;background:#ddd;outline:0;color:#000;border-left:4px solid #fff;border-right:4px solid #fff}.btn:active{color:#f00}
 #imageRightAside{width:160px;height:100%;background-color:#eee;position:fixed;right:0}
-.list-drag li{height:160px;border-bottom:1px solid #ddd;border-top:1px solid #fff;line-height:160px;text-align:center;transition:all 200ms ease 100ms}.list-drag li.dragover{font-size:20px;color:#fff;background:#0888ff}
+.list-drag li{border-bottom:1px solid #ddd;border-top:1px solid #fff;line-height:75px;text-align:center;transition:all 200ms ease 100ms}.list-drag li.dragover{font-size:20px;color:#fff;background:#0888ff}
 .list-drag li.droped{transition:all 600ms ease 100ms}
+.tips{font-size:12px;line-height:23px;padding:0 12px;color:#666}.tips:last-child{color:#06f}

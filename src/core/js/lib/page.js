@@ -34,8 +34,12 @@ Page = function(){
 
 		},
 
+		dragCallback: function(){
+
+		},
+
 		// 页面实例默认拖拽方法
-		drag: function(files, target){
+		drag: function(files, target, e){
 			var ul, $;
 
 			$ = window.$;
@@ -56,6 +60,8 @@ Page = function(){
 					}
 				}
 			})
+
+			this.dragCallback(files, target, e);
 		}
 
 	})
