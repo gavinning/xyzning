@@ -17,19 +17,19 @@ pm = {
 	homePage: 'home',
 
 	// 缓存当前虚拟页信息
-	page: null,
+	page: {},
 
 	// 页面列表
 	pageHash: {},
 	pageArray: [],
 
 	// 缓存上一页虚拟页信息
-	_prev: null,
+	_prev: {},
 
 	// 对外对象
 	root: {},
 
-	// Home页面
+	// 渲染Home页面
 	home: function(){
 		try{
 			this.setHash(this.homePage);
@@ -38,49 +38,47 @@ pm = {
 		}
 	},
 
-	// 上一页面
+	// 渲染上一页面
 	prev: function(){
-		if(!this._prev) return;
+		if(!this._prev.id) return;
 		this.page.leave();
 		this.page = this._prev;
 		this.page.enter();
-		this._prev = null;
+		this._prev = {};
 	},
 
-	// 变更hash
-	setHash: function(hash){
-		location.hash = '#' + hash;
-	},
-
-	// 页面初始化
+	// 页面初始化逻辑
 	init: function(id){
 		var hash;
 		location = window.location;
 		hash = location.hash.slice(1);
-		hash ? this.show(hash) : this.home();
+		hash ? this.load(hash) : this.home();
 	},
 
-	// 虚拟页切换
-	show: function(id){
-		this.leave();
-		this.load(id);
-	},
-
-	// 离开虚拟页
+	// 离开虚拟页，缓存上一页
 	leave: function(){
-		this.page ? this.page.leave() : "";
+		this.page.id ? this.page.leave() : "";
 		this._prev = this.page;
 	},
 
 	// 加载虚拟页
 	load: function(id){
+		// 执行页面离开
+		this.leave();
+
+		// 渲染页面
 		if(this.pageHash[id]){
-			this.pageHash[id].enter()
+			this.page = this.pageHash[id];
+			this.page.enter();
 		}else{
+
+			// 渲染新页面
 			try{
 				require(path.join(pagePath, id));
 			}catch(e){
-				console.error(e)
+				console.error(e);
+				// 出错则返回首页或者404
+				// return this._404();
 				return this.home();
 			}
 		}
@@ -99,19 +97,24 @@ pm = {
 		this.page.enter();
 	},
 
-	// 处理缓存
-	cache: function(){
-
+	// 变更hash
+	setHash: function(hash){
+		location.hash = '#' + hash;
 	},
 
 	// 处理hash变更
 	hashChange: function(hash){
 		if(!hash) return this.home();
-		this.show(hash);
+		this.load(hash);
 	},
 
 	// 处理页面变更
 	pageChange: function(){
+
+	},
+
+	// 处理缓存
+	cache: function(){
 
 	},
 
