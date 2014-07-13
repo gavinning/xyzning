@@ -59,12 +59,12 @@ header,nav,aside,footer{
 }
 
 .content{
-	display: -webkit-box;
 	-webkit-box-flex: 1;
+	overflow: hidden;
 
-	> .inner{
+	> .vp{
 		display: -webkit-box;
-		height: inherit;
+		height: 100%;
 	}
 }
 
@@ -139,7 +139,6 @@ header,nav,aside,footer{
 	padding: 4px;
 	-webkit-transform: translate3d(0,0,0);
 	-webkit-box-flex: 1;
-	margin-right: 160px;
 
 	ul{
 		overflow: hidden;

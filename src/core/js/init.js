@@ -17,7 +17,7 @@ function init(){
 
 
 	// 定义首页id，默认为home
-	pm.homePage = 'image';
+	pm.homePage = 'less';
 	// 初始化首页
 	pm.init();
 
@@ -32,7 +32,7 @@ function init(){
 	// scroll('#mainInner');
 
 	window.onhashchange = function(){
-		console.log('hash change from init.js line52')
+		// console.log('hash change from init.js line52')
 		pm.hashChange(location.hash.slice(1));
 	}
 

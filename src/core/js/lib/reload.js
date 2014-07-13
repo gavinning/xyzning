@@ -24,7 +24,7 @@ var render = {
 	},
 	// 重新渲染css
 	css: function(source){
-		return this.reload();
+		// return this.reload();
 		// return this.update(source);
 	},
 	// 重新渲染js
