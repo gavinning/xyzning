@@ -24,7 +24,8 @@ Page = function(){
 	this.extend({
 		// 页面实例初始化方法
 		init: function(){
-
+			console.log('init ' + this.id);
+			this.enter();
 		},
 
 		// 页面实例进入方法
@@ -76,10 +77,10 @@ Page = function(){
 
 		// 页面实例默认拖拽方法
 		drag: function(files, target, e){
-			var ul, $;
+			var $ = this.$;
+			var ul = $(this.pageId).find('.list-folder ul');
 
-			$ = this.$;
-			ul = $(this.pageId).find('.list-folder ul');
+			if(ul.length == 0) return;
 
 			// 添加文件夹方法
 			function add(file){

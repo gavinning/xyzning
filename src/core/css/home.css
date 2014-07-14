@@ -43,3 +43,10 @@ header,nav,aside,footer{display:block}
 .list-drag li{border-bottom:1px solid #ddd;border-top:1px solid #fff;line-height:75px;text-align:center;transition:all 200ms ease 100ms}.list-drag li.dragover{font-size:20px;color:#fff;background:#0888ff}
 .list-drag li.droped{transition:all 600ms ease 100ms}
 .tips{font-size:12px;line-height:23px;padding:0 12px;color:#666}.tips:last-child{color:#06f}
+.list-file{width:100%}.list-file li{border-bottom:1px solid #eee;padding:8px}
+.list-file strong{display:block}
+.list-file i{display:block;font-size:10px;color:#999}
+.attr{position:absolute;right:0;top:0;width:200px;background:#eee;height:100%;transition:all 500ms ease;-webkit-transform:translate3d(210px, 0, 0)}.attr.show{-webkit-transform:translate3d(0, 0, 0)}
+.list-attr{box-sizing:border-box;padding:8px 12px}.list-attr label{display:block;padding:2px 0}.list-attr label span{font-size:12px;margin-left:6px}
+.list-input{box-sizing:border-box;width:100%;padding:8px 12px}.list-input label{display:-webkit-box;line-height:26px;padding:6px}.list-input label span{display:block;width:90px}
+.list-input input{width:600px;border:1px solid #ddd;height:26px;outline:none;padding:0 6px}

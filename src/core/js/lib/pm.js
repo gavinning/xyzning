@@ -107,8 +107,9 @@ pm = {
 
 		console.log(page.id + ' is reg');
 
+		// 初始化页面
 		this.page = page;
-		this.page.enter();
+		this.page.init();
 	},
 
 	// 变更hash

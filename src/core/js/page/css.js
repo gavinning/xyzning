@@ -15,6 +15,7 @@ page.extend({
 
 	init: function(){
 		console.log('init ' + this.id)
+		this.enter();
 	},
 
 	enter: function(){

@@ -246,12 +246,80 @@ header,nav,aside,footer{
 	}
 }
 
+.list-file{
+	width: 100%;
+
+	li{
+		border-bottom: 1px solid #eee;
+		padding: 8px;
+	}
+
+	strong{
+		display: block;
+	}
+
+	i{
+		display: block;
+		font-size: 10px;
+		color: #999;
+	}
+}
 
 
+.attr{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 200px;
+	background: #eee;
+	height: 100%;
+	transition: all 500ms ease;
+	-webkit-transform: translate3d(210px,0,0);
+	
+	&.show{
+		-webkit-transform: translate3d(0,0,0);
+	}
+}
 
+.list-attr{
+	box-sizing: border-box;
+	padding: 8px 12px;
 
+	label{
+		display: block;
+		padding: 2px 0;
 
+		span{
+			font-size: 12px;
+			margin-left: 6px;
+		}
+	}
+}
 
+.list-input{
+	box-sizing: border-box;
+	width: 100%;
+	padding: 8px 12px;
+
+	label{
+		display: -webkit-box;
+		line-height: 26px;
+		padding: 6px;
+
+		span{
+			display: block;
+			width: 90px;
+		}
+	}
+
+	input{
+		width: 600px;
+		border: 1px solid #ddd;
+		height: 26px;
+		outline: none;
+		padding: 0 6px;
+	}
+}
 
 
 
