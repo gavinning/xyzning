@@ -3,7 +3,6 @@
 // 页面实例
 
 var path = require('path');
-var jade = require('jade');
 var lib = require('linco.lab').lib;
 var Page = require('../lib/page');
 var page = new Page;
@@ -19,51 +18,59 @@ page.extend({
 	},
 
 	enter: function(){
-		// var win = window;
-		// var $ = win.$;
-		// var content = $('#content');
-		// var thisPage = $(this.pageId);
+		var $ = this.$;
 
 		// 载入页面
 		console.log('enter ' + this.id);
 
+		// 渲染页面
 		this.render();
+		this.cache();
 
+
+		// 文件夹列表操作
+		$(this.pageId).find('.list-folder').delegate('li', 'click', function(){
+			var files = [];
+			var cssArr = [];
+			var folderPath = this.getAttribute('path');
+
+			// 不处理已被选中的文件夹
+			if($(this).hasClass('selected')) return;
+
+			// 状态切换
+			$(this).addClass('selected').siblings('.selected').removeClass('selected');
+
+			// 遍历src
+			if(lib.isDir(folderPath)){
+				files = lib.dir(folderPath, ['.svn']).file;
+				files.forEach(function(item){
+					if(item.match(/less$/g)){
+						cssArr.push(item)
+					}
+				})
+			}
+
+			console.log(cssArr.join('\n'))
+		})
 
 
 	},
 
 	leave: function(){
 		console.log('leave ' + this.id);
-		console.log(this.id + ' is hide 111111111111111')
-		this.page.get(0).style.display = 'none';
+		this.page.hide();
+	},
+
+	dragCallback: function(){
+		this.cache(1);
 	},
 
 	ready: function(){
 
-	},
-
-	render: function(){
-		var win = window;
-		var $ = this.$;
-		var content = $('#content');
-		var html;
-
-		this.page = $(this.pageId);
-
-		if(this.page.length == 1){
-			this.page.show();
-		}else{
-			html = jade.renderFile(path.join(window.root, '/views/less.jade'), {});
-			content.append(html);
-			this.page = content.find(this.pageId);
-			this.page.height(content.height())
-			this.page.show();
-		}
 	}
+
 });
 
-// page.init();
 page.reg();
 
 module.exports = page;

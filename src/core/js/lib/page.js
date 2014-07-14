@@ -1,9 +1,12 @@
 'use strict';
 
-// 底层框架页面，基于PM
+// author: gavinning
+// HomePage: www.ilinco.com
+// 底层框架页面，基于PM，由底层框架逻辑和部分页面逻辑组成
 
 var lib = require('linco.lab').lib;
 var path = require('path');
+var jade = require('jade');
 var pm = require('./pm');
 var mTpl = require('./mTpl').mTpl;
 var Page;
@@ -34,6 +37,39 @@ Page = function(){
 
 		},
 
+		back: function(){
+
+		},
+
+		// 渲染页面
+		render: function(src){
+			var win = window;
+			var $ = win.$;
+			var content = $('#content');
+			var html;
+
+			this.page = $(this.pageId);
+
+			if(this.page.length == 1){
+				this.page.show();
+			}else{
+				html = jade.renderFile(src || path.join(win.root, '/views/'+this.id+'.jade'), {});
+				content.append(html);
+				this.page = content.find(this.pageId);
+				this.page.show();
+			}
+		},
+
+		cache: function(num){
+			if(num){
+				// 缓存aside
+				window.localStorage[this.pageId + 'Aside'] = this.$(this.pageId).find('.list-folder ul').html();
+			}else{
+				// 取出aside
+				this.$(this.pageId).find('.list-folder ul').html(window.localStorage[this.pageId + 'Aside']);
+			}
+		},
+
 		dragCallback: function(){
 
 		},
@@ -42,8 +78,8 @@ Page = function(){
 		drag: function(files, target, e){
 			var ul, $;
 
-			$ = window.$;
-			ul = $('#listFolder').find('ul');
+			$ = this.$;
+			ul = $(this.pageId).find('.list-folder ul');
 
 			// 添加文件夹方法
 			function add(file){
@@ -81,12 +117,6 @@ Page.prototype = {
 		pm.cache();
 		this.stats();
 		return;
-	},
-
-	// 渲染页面
-	render: function(id, dom, data){
-		var doc = window.document;
-		doc.getElementById(id).innerHTML = mTpl(dom, data);
 	},
 
 	// 调用node-webkit shell

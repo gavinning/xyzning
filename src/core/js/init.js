@@ -31,11 +31,6 @@ function init(){
 	// 模拟滚动条测试
 	// scroll('#mainInner');
 
-	window.onhashchange = function(){
-		// console.log('hash change from init.js line52')
-		pm.hashChange(location.hash.slice(1));
-	}
-
 };
 
 module.exports = init;
