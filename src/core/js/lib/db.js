@@ -16,7 +16,7 @@ module.exports = db;
 // 	aside: {
 // 		"/Users/gavinning/Documents/lab/github/xyzning": {
 // 			name: "xyzning",
-// 			src	: "/Users/gavinning/Documents/lab/github/xyzning",
+// 			path: "/Users/gavinning/Documents/lab/github/xyzning",
 // 			isHome: false
 // 		}
 // 	}

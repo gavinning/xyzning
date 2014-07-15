@@ -94,7 +94,7 @@ page.extend({
 
 				// 添加文件夹方法
 				function add(file){
-					ul.append('<li path="'+file.src+'">'+file.name+'</li>')
+					ul.append('<li path="'+file.path+'">'+file.name+'</li>')
 				}
 
 				// 监听drag事件
@@ -109,17 +109,74 @@ page.extend({
 		// enter end.
 	},
 
-	cache: function(key, value){
+	buildAsideHash: function(obj){
+		page.asideHash = page.asideHash || {};
+		lib.each(obj.aside, function(key, value){
+			page.asideHash[key] = true;
+		})
+	},
+
+	cache: function(src){
+		var cache, tmp;
+
+		cache = {
+			type: "page",
+			name: "project",
+			aside: {
+				// @path: {
+				// 	@name: string,
+				// 	@path: string:url,
+				// 	@isHome: true,
+				// 	@isCompress: true
+				// }
+			}
+		};
+
+		// 加载数据
 		if(arguments.length == 0){
 			db.data.find({name: this.id}, function(e, docs){
 				if(docs.length==0) return;
-				page.live.renderAside(docs[0])
+				// 缓存页面data对象
+				page._cache = docs[0];
+				page.live.renderAside(docs[0]);
+
+				// 重建page.asideHash
+				page.buildAsideHash(page._cache);
+			});
+
+			return;
+		};
+
+
+		// 存储数据
+
+		// 更新aside节点对象
+		tmp = {
+			name: path.basename(src),
+			path: src,
+			isHome: $('#isHome').prop('checked'),
+			isCompress: $('#isCompress').prop('checked')
+		};
+
+		// 更新数据
+		if(page._cache){
+			page._cache.aside[src] = tmp;
+			db.data.update({name: "project"}, page._cache, function(e, num){
+				console.log(e, num)
+			})
+		}else{
+			cache.aside[src] = tmp;
+			db.data.insert(cache, function(e, doc){
+				page._cache = doc;
 			})
 		}
+
 	},
 
-	dragCallback: function(){
-		// this.cache(1);
+	dragCallback: function(filelist){
+		lib.each(filelist, function(i, item){
+			page.cache(item.path)
+		})
 	},
 
 	ready: function(){

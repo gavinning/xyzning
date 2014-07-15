@@ -10,8 +10,6 @@ var jade = require('jade');
 var pm = require('./pm');
 var mTpl = require('./mTpl').mTpl;
 var Page;
-var tmp = {};
-tmp.hash = {};
 
 // 设置页面基础方法
 // 虚拟页面可选引用
@@ -82,8 +80,13 @@ Page = function(){
 		// 页面实例默认拖拽方法
 		drag: function(files, target, e){
 			var ul = $(this.pageId).find('.list-folder ul');
+			var hash;
 
 			if(ul.length == 0) return;
+
+			// 获取aside过滤hash
+			this.asideHash ? "" : this.asideHash = {};
+			hash = this.asideHash;
 
 			// 添加文件夹方法
 			function add(file){
@@ -94,8 +97,8 @@ Page = function(){
 			// 监听drag事件
 			lib.each(files, function(i, item){
 				if(lib.isDir(item.path)){
-					if(!tmp.hash[item.path]){
-						tmp.hash[item.path] = item;
+					if(!hash[item.path]){
+						hash[item.path] = true;
 						add(item);
 					}
 				}

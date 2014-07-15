@@ -87,8 +87,7 @@ page.extend({
 					// 底部状态栏显示文件夹源路径
 					live.setTips(['Source: ' + source, null, null]);
 
-				// 如果存在文件夹列表加载第一个文件夹
-				}).find('li').eq(0).click();
+				});
 
 				// 预览图片
 				doc.onkeypress = function(e){
@@ -207,6 +206,8 @@ page.extend({
 				// 	})
 				// });
 
+				if(!lib.isDir(dragTargetFolder)) return;
+
 				live.renderList(dragTargetFolder);
 
 				// 监听拖拽事件
@@ -289,6 +290,7 @@ page.extend({
 
 		});
 
+		// 执行页面逻辑
 		live.init();
 	}
 

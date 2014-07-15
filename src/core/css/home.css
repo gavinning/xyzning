@@ -35,13 +35,13 @@ header,nav,aside,footer{display:block}
 .list-folder li{height:40px;line-height:40px;padding:0 12px;border-bottom:1px solid #ccc;border-top:1px solid #fff}.list-folder li:first-child{border-top:none}
 .list-folder li:last-child{border-bottom:none}
 .list-folder li.selected{background:rgba(0,0,0,0.1)}
-.list-images{padding:4px;-webkit-transform:translate3d(0, 0, 0);-webkit-box-flex:1}.list-images ul{overflow:hidden}
-.list-images li{-webkit-transform:translate3d(0, 0, 0);width:200px;height:300px;float:left;display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;background-size:cover;background-position:center top;border:4px solid #fff;position:relative}.list-images li.current{border-color:#038dfa}.list-images li.current .iselected{display:block}
+.list-images{padding:4px;-webkit-transform:translate3d(0, 0, 0);-webkit-box-flex:1;margin-right:160px}.list-images ul{overflow:hidden}
+.list-images li{-webkit-transform:translate3d(0, 0, 0);width:100px;height:160px;float:left;display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;background-size:cover;background-position:center top;border:2px solid #fff;position:relative}.list-images li.current{border-color:#038dfa}.list-images li.current .iselected{display:block}
 .list-images .iselected{width:30px;height:30px;position:absolute;right:10px;top:10px;display:none}
 .list-images #getMoreImage{display:none}
 .list-images img{-webkit-transform:translate3d(0, 0, 0)}
-.btn{display:block;width:100%;height:40px;line-height:38px;font-size:17px;-webkit-box-sizing:border-box;border:none;background:#ddd;outline:0;color:#000;border-left:4px solid #fff;border-right:4px solid #fff}.btn:active{color:#f00}
-#imageRightAside{width:160px;height:100%;background-color:#eee;position:fixed;right:0}
+.btn{display:block;width:100%;height:40px;line-height:38px;font-size:17px;-webkit-box-sizing:border-box;border:none;background:#ddd;outline:0;color:#000;border-left:2px solid #fff;border-right:2px solid #fff}.btn:active{color:#f00}
+#imageRightAside{width:160px;height:100%;background-color:#eee;position:absolute;right:0}
 .list-drag li{border-bottom:1px solid #ddd;border-top:1px solid #fff;line-height:75px;text-align:center;transition:all 200ms ease 100ms}.list-drag li.dragover{font-size:20px;color:#fff;background:#0888ff}
 .list-drag li.droped{transition:all 600ms ease 100ms}
 .tips{font-size:12px;line-height:23px;padding:0 12px;color:#666}.tips:last-child{color:#06f}
