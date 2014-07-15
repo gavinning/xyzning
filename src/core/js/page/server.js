@@ -14,8 +14,6 @@ page.extend({
 	id: "server",
 	// 虚拟页DOM id，唯一，关系页面逻辑
 	pageId: "#vpServer",
-	// 缓存全局库
-	$: window.$,
 
 	init: function(){
 		console.log('init ' + this.id);
@@ -24,7 +22,6 @@ page.extend({
 	},
 
 	enter: function(){
-		var $ = this.$;
 		var live = {};
 
 		// 载入页面

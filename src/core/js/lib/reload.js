@@ -70,9 +70,10 @@ var render = {
 
 
 	},
-	// 重新渲染窗口
+	// 重新渲染app
 	reload: function(){
-		window.location.reload();
+		// window.location.reload();
+		window.gui.Window.get().reloadDev();
 	}
 }
 

@@ -35,7 +35,8 @@ Page = function(){
 
 		// 页面实例离开方法
 		leave: function(){
-
+			console.log('leave ' + this.id);
+			this.page.hide();
 		},
 
 		back: function(){
@@ -44,17 +45,15 @@ Page = function(){
 
 		// 渲染页面
 		render: function(src){
-			var win = window;
-			var $ = win.$;
 			var content = $('#content');
 			var html;
 
-			this.page = $(this.pageId);
+			this.page = content.find(this.pageId);
 
 			if(this.page.length == 1){
 				this.page.show();
 			}else{
-				html = jade.renderFile(src || path.join(process.cwd(), '/views/'+this.id+'.jade'), {});
+				html = jade.renderFile(src || path.join(root.app.dir, '/views/'+this.id+'.jade'), {});
 				content.append(html);
 				this.page = content.find(this.pageId);
 				this.page.show();
@@ -82,7 +81,6 @@ Page = function(){
 
 		// 页面实例默认拖拽方法
 		drag: function(files, target, e){
-			var $ = window.$;
 			var ul = $(this.pageId).find('.list-folder ul');
 
 			if(ul.length == 0) return;

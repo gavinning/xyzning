@@ -13,18 +13,18 @@ function init(){
 	var pm = require('./lib/pm');
 	var rootPath = process.cwd();
 	
-	var $ = window.$;
-	var location = window.location;
+	// 检测nodejs环境
+	if(!root || root.root !== root){
+		return console.log(root + ' is not nodejs root');
+	}
 
 	// 缓存app信息
-	if(root.root === root){
-		root.app = {
-			dir: process.cwd(),
-			tmp: window.gui.App.dataPath
-		}
-
-		// console.log(root.app)
+	root.app = {
+		dir: process.cwd(),
+		tmp: window.gui.App.dataPath
 	}
+	// 缓存全局库
+	root.$ = window.$;
 
 
 	// 定义首页id，默认为home

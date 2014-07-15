@@ -1,8 +1,8 @@
 'use strict';
 
 // 页面实例
-var watch = require('/Users/gavinning/Documents/lab/github/Lab/src/watch');
 var path = require('path');
+var watch = require(path.join(root.app.dir, '../../Lab/src/watch'));
 var lib = require('linco.lab').lib;
 var db = require('../lib/db');
 var Page = require('../lib/page');
@@ -17,7 +17,13 @@ page.extend({
 	pageId: "#vpProject",
 
 	init: function(){
+		// 初始化页面
 		console.log('init ' + this.id);
+
+		// 注册live方法
+		this.live = new lib.parent();
+
+		// 进入页面
 		this.enter();
 
 		// 读取缓存数据
@@ -30,9 +36,8 @@ page.extend({
 	},
 
 	enter: function(){
-		var $ = window.$;
-		var live = this.live = {};
 		var _this = this;
+		var live = this.live;
 
 		// 载入页面
 		console.log('enter ' + this.id);
@@ -40,13 +45,8 @@ page.extend({
 		// 渲染页面
 		this.render();
 
-		// 拓展live
-		live.extend = function(obj){
-			lib.extend(this, obj);
-		}
-
 		// 文件夹列表操作
-		$(this.pageId).find('.list-folder').delegate('li', 'click', function(){
+		this.page.find('.list-folder').delegate('li', 'click', function(){
 			var files = [];
 			var cssArr = [];
 			var folderPath = this.getAttribute('path');
@@ -62,7 +62,6 @@ page.extend({
 		});
 
 
-		// 工具方法
 		live.extend({
 
 			renderFolder: function(src){
@@ -78,7 +77,7 @@ page.extend({
 					}
 				});
 
-				$(page.pageId).find('.list-file ul').html(this.list(cssArr));
+				_this.page.find('.list-file ul').html(this.list(cssArr));
 			},
 
 			list: function(arr){
@@ -91,7 +90,7 @@ page.extend({
 			},
 
 			renderAside: function(obj){
-				var ul = $(page.pageId).find('.list-folder ul');
+				var ul = _this.page.find('.list-folder ul');
 
 				// 添加文件夹方法
 				function add(file){
@@ -110,15 +109,10 @@ page.extend({
 		// enter end.
 	},
 
-	leave: function(){
-		console.log('leave ' + this.id);
-		// this.cache(1);
-		this.page.hide();
-	},
-
 	cache: function(key, value){
 		if(arguments.length == 0){
 			db.data.find({name: this.id}, function(e, docs){
+				if(docs.length==0) return;
 				page.live.renderAside(docs[0])
 			})
 		}
