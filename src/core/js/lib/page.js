@@ -54,7 +54,7 @@ Page = function(){
 			if(this.page.length == 1){
 				this.page.show();
 			}else{
-				html = jade.renderFile(src || path.join(win.root, '/views/'+this.id+'.jade'), {});
+				html = jade.renderFile(src || path.join(process.cwd(), '/views/'+this.id+'.jade'), {});
 				content.append(html);
 				this.page = content.find(this.pageId);
 				this.page.show();
@@ -62,12 +62,17 @@ Page = function(){
 		},
 
 		cache: function(num){
+			var ul = window.$(this.pageId).find('.list-folder ul');
+			var cache = window.localStorage[this.pageId + 'Aside'];
+
 			if(num){
 				// 缓存aside
-				window.localStorage[this.pageId + 'Aside'] = this.$(this.pageId).find('.list-folder ul').html();
+				ul.html() ?
+					window.localStorage[this.pageId + 'Aside'] = ul.html():"";
 			}else{
 				// 取出aside
-				this.$(this.pageId).find('.list-folder ul').html(window.localStorage[this.pageId + 'Aside']);
+				cache && cache !== 'null' ?
+					ul.html(cache):"";
 			}
 		},
 
@@ -77,7 +82,7 @@ Page = function(){
 
 		// 页面实例默认拖拽方法
 		drag: function(files, target, e){
-			var $ = this.$;
+			var $ = window.$;
 			var ul = $(this.pageId).find('.list-folder ul');
 
 			if(ul.length == 0) return;

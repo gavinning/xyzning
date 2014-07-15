@@ -1,31 +1,38 @@
 'use strict';
 
 // 页面实例
-
+var watch = require('/Users/gavinning/Documents/lab/github/Lab/src/watch');
 var path = require('path');
 var lib = require('linco.lab').lib;
+var db = require('../lib/db');
 var Page = require('../lib/page');
 var page = new Page;
 
 page.extend({
 	// 页面名称，不关系页面业务逻辑
-	name: "less page",
+	name: "project page",
 	// 页面id，唯一，关系页面逻辑
-	id: "less",
+	id: "project",
 	// 虚拟页DOM id，唯一，关系页面逻辑
-	pageId: "#vpLess",
-	// 缓存全局库
-	$: window.$,
+	pageId: "#vpProject",
 
 	init: function(){
 		console.log('init ' + this.id);
 		this.enter();
+
+		// 读取缓存数据
 		this.cache();
+
+		// 启动监听
+		// watch(['xyzning'], {baseDir: '/Users/gavinning/Documents/lab/github/'}, function(filename, stat){
+		// 	console.log(filename)
+		// })
 	},
 
 	enter: function(){
-		var $ = this.$;
-		var live = {};
+		var $ = window.$;
+		var live = this.live = {};
+		var _this = this;
 
 		// 载入页面
 		console.log('enter ' + this.id);
@@ -55,6 +62,7 @@ page.extend({
 		});
 
 
+		// 工具方法
 		live.extend({
 
 			renderFolder: function(src){
@@ -71,8 +79,6 @@ page.extend({
 				});
 
 				$(page.pageId).find('.list-file ul').html(this.list(cssArr));
-
-				console.log(this.list(cssArr))
 			},
 
 			list: function(arr){
@@ -82,20 +88,44 @@ page.extend({
 					ul.append(li);
 				});
 				return ul.html();
+			},
+
+			renderAside: function(obj){
+				var ul = $(page.pageId).find('.list-folder ul');
+
+				// 添加文件夹方法
+				function add(file){
+					ul.append('<li path="'+file.src+'">'+file.name+'</li>')
+				}
+
+				// 监听drag事件
+				lib.each(obj.aside, function(key, value){
+					if(lib.isDir(key)){
+						add(value);
+					}
+				})
 			}
-		})
+		});
 
-
+		// enter end.
 	},
 
 	leave: function(){
 		console.log('leave ' + this.id);
-		this.cache(1);
+		// this.cache(1);
 		this.page.hide();
 	},
 
+	cache: function(key, value){
+		if(arguments.length == 0){
+			db.data.find({name: this.id}, function(e, docs){
+				page.live.renderAside(docs[0])
+			})
+		}
+	},
+
 	dragCallback: function(){
-		this.cache(1);
+		// this.cache(1);
 	},
 
 	ready: function(){

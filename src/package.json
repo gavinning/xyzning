@@ -1,14 +1,14 @@
 {
-	"name": "ilinco xyzning",
+	"name": "xyzning",
 	"main": "views/index.html",
 	"description": "for web dev",
 	"version": "0.1.0",
 	"keywords": [ "ilinco", "linco", "xyzning" ],
 	"window": {
-		"debug": true,
+		"debug": false,
 		"title": "ilinco xyzning",
 		"icon": "icon/icon.png",
-		"toolbar": true,
+		"toolbar": false,
 		"frame": true,
 		"width": 1100,
 		"height": 700,

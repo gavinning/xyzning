@@ -75,7 +75,8 @@ pm = {
 
 	// 加载虚拟页
 	load: function(id){
-		if(this.page.id == id) return;
+		// debug
+		// if(this.page.id == id) return;
 
 		// 执行页面离开
 		this.leave();

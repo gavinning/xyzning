@@ -13,11 +13,22 @@ function init(){
 	var pm = require('./lib/pm');
 	var rootPath = process.cwd();
 	
+	var $ = window.$;
 	var location = window.location;
+
+	// 缓存app信息
+	if(root.root === root){
+		root.app = {
+			dir: process.cwd(),
+			tmp: window.gui.App.dataPath
+		}
+
+		// console.log(root.app)
+	}
 
 
 	// 定义首页id，默认为home
-	pm.homePage = 'less';
+	pm.homePage = 'project';
 	// 初始化首页
 	pm.init();
 
@@ -31,6 +42,11 @@ function init(){
 	// 模拟滚动条测试
 	// scroll('#mainInner');
 
+
+	// for nav
+	$('#nav').delegate('.item',  'click', function(){
+		$(this).addClass('selected').siblings('.selected').removeClass('selected')
+	})
 };
 
 module.exports = init;
