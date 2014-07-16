@@ -8,10 +8,8 @@ var Page = require('../lib/page');
 var page = new Page;
 
 page.extend({
-	name: "css page",
 	id: "css",
 	pageId: "#vpCss",
-	$: window.$,
 
 	init: function(){
 		console.log('init ' + this.id)
@@ -19,22 +17,7 @@ page.extend({
 	},
 
 	enter: function(){
-		// 载入页面
-		console.log('enter ' + this.id);
-
-
 		this.render();
-
-
-	},
-
-	leave: function(){
-		console.log('leave ' + this.id)
-		this.page.hide();
-	},
-
-	ready: function(){
-
 	}
 
 });

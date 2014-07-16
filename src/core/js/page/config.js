@@ -17,14 +17,21 @@ page.extend({
 	init: function(){
 		console.log('init ' + this.id);
 
-		this.enter();
-		this.bind();
+		// 回调处理可以忽略
+		// 测试过程中刷新频繁
+		// 所以做一下回调
+		if(app.config._id){
+			this.enter();
+			this.bind();
+		}else{
+			this.getCache(function(){
+				page.enter();
+				page.bind();
+			})
+		}
 	},
 
 	enter: function(){
-		// 载入页面
-		console.log('=> ' + this.id);
-
 		// 渲染页面
 		this.render(null, app.config);
 	},
@@ -32,7 +39,6 @@ page.extend({
 	bind: function(){
 		// 更新配置
 		$('#updateConfig').click(function(){
-			console.log(1)
 			page.setCache();
 		})
 	},
@@ -57,8 +63,6 @@ page.extend({
 				console.log(e);
 			}
 
-			docs = docs || [];
-
 			if(docs.length == 0){
 				db.data.insert(app.config, function(e, doc){
 					app.config = doc;
@@ -71,6 +75,17 @@ page.extend({
 			}
 		})
 
+	},
+
+	getCache: function(callback){
+		// 读取全局配置信息
+		db.data.find({name: app.config.name}, function(e, docs){
+			if(e) return tips.show('数据库链接失败');
+			docs.length > 0 ?
+				app.config = docs[0] : "";
+
+			callback(app.config)
+		});
 	}
 
 });

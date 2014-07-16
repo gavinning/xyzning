@@ -34,7 +34,6 @@ Page = function(){
 
 		// 页面实例离开方法
 		leave: function(){
-			console.log(this.id + ' =>');
 			this.page ? "" : this.page = $(this.pageId);
 			this.page.hide();
 		},

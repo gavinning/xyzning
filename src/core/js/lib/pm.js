@@ -52,6 +52,9 @@ pm = {
 	init: function(id){
 		var hash;
 
+		// PM init log
+		console.log('PM is init.');
+
 		if("onhashchange" in window){
 
 			// 监听hashchange事件
@@ -85,6 +88,7 @@ pm = {
 		if(this.pageHash[id]){
 			this.page = this.pageHash[id];
 			this.page.enter();
+
 		}else{
 
 			// 渲染新页面
@@ -93,10 +97,17 @@ pm = {
 			}catch(e){
 				console.error(e);
 				// 出错则返回首页或者404
-				// return this._404();
-				return this.home();
+				// this._404();
+				// this.home();
+				this.page = this.pageHash[this.homePage];
+				this.page.enter();
 			}
 		}
+
+		// 页面切换日志
+		this._prev.id ?
+			console.log(this._prev.id + ' => ' + this.page.id):
+			console.log('=> ' + this.page.id);
 	},
 
 	// 虚拟页注册
@@ -106,6 +117,7 @@ pm = {
 			this.pageArray.push(page);
 		};
 
+		// 页面注册日志
 		console.log(page.id + ' is reg');
 
 		// 初始化页面

@@ -38,9 +38,6 @@ page.extend({
 		var doc = window.document;
 		var live = this.live;
 
-		// 载入页面
-		console.log('enter ' + this.id);
-
 		// 渲染页面
 		this.render();
 

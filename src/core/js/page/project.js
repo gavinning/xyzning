@@ -37,9 +37,6 @@ page.extend({
 		var _this = this;
 		var live = this.live;
 
-		// 载入页面
-		console.log('=> ' + this.id);
-
 		// 渲染页面
 		this.render();
 
