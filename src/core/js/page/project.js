@@ -10,7 +10,7 @@ var page = new Page;
 
 page.extend({
 	// 页面id，唯一，关系页面逻辑
-	id: path.basename(__filename, ".js"),
+	id: "project",
 	// 虚拟页DOM id，唯一，关系页面逻辑
 	pageId: "#vpProject",
 
@@ -25,41 +25,44 @@ page.extend({
 		this.enter();
 
 		// 读取缓存数据
+		// 渲染aside列表
+		// 重建asideHash
+		// 创建监听
 		this.getCache();
 
-		// 启动监听
-		// watch(['xyzning'], {baseDir: '/Users/gavinning/Documents/lab/github/'}, function(filename, stat){
-		// 	console.log(filename)
-		// })
+		// 绑定事件
+		this.bind();
 	},
 
 	enter: function(){
+		// 渲染页面
+		this.render();
+	},
+
+	bind: function(){
 		var _this = this;
 		var live = this.live;
 
-		// 渲染页面
-		this.render();
+		// 文件夹列表操作
+		this.page.find('.list-folder').delegate('li', 'click', function(){
+			var files = [];
+			var cssArr = [];
+			var folderPath = this.getAttribute('path');
+
+			// 不处理已被选中的文件夹
+			if($(this).hasClass('selected')) return;
+
+			// 状态切换
+			$(this).addClass('selected').siblings('.selected').removeClass('selected');
+
+			// 渲染文件夹列表
+			_this.live.renderFolder(folderPath);
+
+			// 读取配置项
+		});
 
 		live.extend({
-			init: function(argument) {
-
-				// 文件夹列表操作
-				_this.page.find('.list-folder').delegate('li', 'click', function(){
-					var files = [];
-					var cssArr = [];
-					var folderPath = this.getAttribute('path');
-
-					// 不处理已被选中的文件夹
-					if($(this).hasClass('selected')) return;
-
-					// 状态切换
-					$(this).addClass('selected').siblings('.selected').removeClass('selected');
-
-					// 渲染文件夹列表
-					live.renderFolder(folderPath);
-
-					// 读取配置项
-				});
+			init: function() {
 				
 			},
 
@@ -104,11 +107,9 @@ page.extend({
 				})
 			}
 		});
-
-		live.init();
-		// enter end.
 	},
 
+	// 创建asideHash，用于过滤重复的项目
 	buildAsideHash: function(obj){
 		page.asideHash = page.asideHash || {};
 		lib.each(obj.aside, function(key, value){
@@ -116,6 +117,7 @@ page.extend({
 		})
 	},
 
+	// 缓存数据
 	setCache: function(src){
 		var cache, tmp;
 
@@ -154,43 +156,57 @@ page.extend({
 		}
 	},
 
+	// 获取缓存数据
 	getCache: function(obj){
 		obj = obj || {name: this.id};
 
 		// 加载数据
 		db.data.find(obj, function(e, docs){
 			if(docs.length==0) return;
+
 			// 缓存页面data对象
 			page._cache = docs[0];
-			page.live.renderAside(docs[0]);
+
+			// 渲染页面aside列表
+			page.live.renderAside(page._cache);
 
 			// 重建page.asideHash
 			page.buildAsideHash(page._cache);
+
+			// 创建监听
+			page.watch(page._cache);
 		});
 
 		return;
 	},
 
-	getConfig: function(obj){
-		obj = obj || {name: 'config'};
+	// 创建项目监听
+	watch: function(obj){
+		var arr;
 
-		// 加载数据
-		db.data.find(obj, function(e, docs){
-			if(docs.length==0) return;
-			// 配置信息缓存到app下
-			app.config = docs[0];
-		});
+		if(lib.isArray(obj)){
+			watch(obj, function(filename, stat){
+				console.log(filename)
+			})
+		}
+		if(obj._id){
+			arr = [];
+			lib.each(obj.aside, function(key, value){
+				arr.push(value.path);
+			})
+			this.watch(arr);
+		}
+		if(lib.isString(obj)){
+			this.watch([obj])
+		}
 	},
 
 	dragCallback: function(filelist){
 		lib.each(filelist, function(i, item){
 			page.setCache(item.path)
 		})
-	},
-
-	ready: function(){
-
 	}
+
 
 });
 

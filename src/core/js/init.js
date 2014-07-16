@@ -12,7 +12,6 @@ function init(){
 	var scroll = require('./lib/scroll');
 	var drag = require('./lib/drag');
 	var pm = require('./lib/pm');
-	var rootPath = process.cwd();
 	
 	// 检测nodejs环境
 	if(!root || root.root !== root){
@@ -63,7 +62,7 @@ function init(){
 	});
 
 	// 监听项目资源，并根据规则自动渲染
-	reload(path.join(rootPath, '/core/index.html'));
+	reload(path.join(app.dir, '/core/index.html'));
 	// 模拟滚动条测试
 	// scroll('#mainInner');
 

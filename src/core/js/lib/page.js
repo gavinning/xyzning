@@ -23,12 +23,23 @@ Page = function(){
 	this.extend({
 		// 页面实例初始化方法
 		init: function(){
+			// 页面初始化日志
 			console.log('init ' + this.id);
+			// 进入页面
 			this.enter();
+			// 页面DOM事件绑定，所有事件绑定集合方法
+			this.bind();
 		},
 
 		// 页面实例进入方法
+		// 每次需要执行方法放到这里
 		enter: function(){
+
+			// this.render();
+		},
+
+		// 页面DOM事件绑定方法
+		bind: function(){
 
 		},
 
@@ -38,11 +49,12 @@ Page = function(){
 			this.page.hide();
 		},
 
+		// 页面回退方法，默认调用系统回退
 		back: function(){
 
 		},
 
-		// 渲染页面
+		// 渲染页面方法
 		render: function(src, data){
 			var content = $('#content');
 			var html;
@@ -59,19 +71,8 @@ Page = function(){
 			}
 		},
 
-		cache: function(num){
-			var ul = window.$(this.pageId).find('.list-folder ul');
-			var cache = window.localStorage[this.pageId + 'Aside'];
-
-			if(num){
-				// 缓存aside
-				ul.html() ?
-					window.localStorage[this.pageId + 'Aside'] = ul.html():"";
-			}else{
-				// 取出aside
-				cache && cache !== 'null' ?
-					ul.html(cache):"";
-			}
+		cache: function(){
+			
 		},
 
 		dragCallback: function(){
