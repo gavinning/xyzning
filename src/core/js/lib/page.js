@@ -8,6 +8,7 @@ var lib = require('linco.lab').lib;
 var path = require('path');
 var jade = require('jade');
 var pm = require('./pm');
+var tips = require('./tips');
 var mTpl = require('./mTpl').mTpl;
 var Page;
 
@@ -33,7 +34,8 @@ Page = function(){
 
 		// 页面实例离开方法
 		leave: function(){
-			console.log('leave ' + this.id);
+			console.log(this.id + ' =>');
+			this.page ? "" : this.page = $(this.pageId);
 			this.page.hide();
 		},
 
@@ -42,7 +44,7 @@ Page = function(){
 		},
 
 		// 渲染页面
-		render: function(src){
+		render: function(src, data){
 			var content = $('#content');
 			var html;
 
@@ -51,7 +53,7 @@ Page = function(){
 			if(this.page.length == 1){
 				this.page.show();
 			}else{
-				html = jade.renderFile(src || path.join(root.app.dir, '/views/'+this.id+'.jade'), {});
+				html = jade.renderFile(src || path.join(root.app.dir, '/views/'+this.id+'.jade'), data || {});
 				content.append(html);
 				this.page = content.find(this.pageId);
 				this.page.show();
@@ -112,6 +114,10 @@ Page = function(){
 
 // 虚拟页面公共方法
 Page.prototype = {
+	// 全局tips模块占位
+	tips: function(msg){
+		tips.show(msg)
+	},
 
 	// 统计方法
 	stats: function(){

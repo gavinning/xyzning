@@ -1,0 +1,34 @@
+#vpConfig.vp.vp-config
+	.list-input
+		h2.title 服务器配置 
+		label
+			span 是否启用：
+			-if(config.serverEnable)
+				input#serverEnable(type="checkbox" checked="checked")
+			-else
+				input#serverEnable(type="checkbox")
+		label
+			span 服务器地址：
+			input#serverPath(type="text" value="#{config.serverPath}")
+		label
+			span 本地根路径：
+			input#localPath(type="text" value="#{config.localPath}")
+		label
+			span key：
+			input#key(type="password" value="#{config.key}")
+	.list-input
+		h2.title less配置 
+		label
+			span HOME模式：
+			-if(config.defaultHome)
+				input#defaultHome(type="checkbox" checked="checked")
+			-else
+				input#defaultHome(type="checkbox")
+		label
+			span 压缩模式：
+			-if(config.defaultCompress)
+				input#defaultCompress(type="checkbox" checked="checked")
+			-else
+				input#defaultCompress(type="checkbox")
+
+	button#updateConfig 更新配置

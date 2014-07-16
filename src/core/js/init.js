@@ -1,12 +1,13 @@
 'use strict';
 
 // 初始化首页
-
 function init(){
 	var fs = require('fs');
 	var path = require('path');
 	var lib = require('linco.lab').lib;
 
+	var tips = require('./lib/tips');
+	var db = require('./lib/db');
 	var reload = require('./lib/reload');
 	var scroll = require('./lib/scroll');
 	var drag = require('./lib/drag');
@@ -21,10 +22,33 @@ function init(){
 	// 缓存app信息
 	root.app = {
 		dir: process.cwd(),
-		tmp: window.gui.App.dataPath
+		tmp: window.gui.App.dataPath,
+
+		// 默认配置信息
+		config: {
+			type: "page",
+			name: "config",
+			isConfig: true,
+			config: {
+				// for server
+				serverEnable	: false,
+				serverPath		: '',
+				localPath		: '',
+				key				: '',
+
+				// for less
+				defaultHome		: true,
+				defaultCompress	: true
+			}
+		}
 	}
 	// 缓存全局库
 	root.$ = window.$;
+	// 读取全局配置信息
+	db.data.find({name: app.config.name}, function(e, docs){
+		if(e) return tips.show('数据库链接失败');
+		app.config = docs[0];
+	});
 
 
 	// 定义首页id，默认为home
@@ -47,6 +71,8 @@ function init(){
 	$('#nav').delegate('.item',  'click', function(){
 		$(this).addClass('selected').siblings('.selected').removeClass('selected')
 	})
+
+
 };
 
 module.exports = init;

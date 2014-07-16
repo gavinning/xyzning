@@ -1,5 +1,5 @@
 var path = require('path');
-var dbPath = path.join(root.app.dir, 'db');
+var dbPath = path.join(root.app ? root.app.dir : process.cwd(), 'db');
 var nedb = require('nedb');
 var db = {};
 
