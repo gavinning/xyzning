@@ -12,6 +12,7 @@ function init(){
 	var scroll = require('./lib/scroll');
 	var drag = require('./lib/drag');
 	var pm = require('./lib/pm');
+	var location = window.location;
 	
 	// 检测nodejs环境
 	if(!root || root.root !== root){
@@ -31,6 +32,7 @@ function init(){
 			config: {
 				// for server
 				serverEnable	: false,
+				serverApi		: '',
 				serverPath		: '',
 				localPath		: '',
 				key				: '',
@@ -69,9 +71,12 @@ function init(){
 
 	// for nav
 	$('#nav').delegate('.item',  'click', function(){
-		$(this).addClass('selected').siblings('.selected').removeClass('selected')
+		var hash = this.getAttribute('hash');
+		if(hash){
+			location.hash = hash;
+			$(this).addClass('selected').siblings('.selected').removeClass('selected');
+		}
 	})
-
 
 };
 

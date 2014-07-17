@@ -39,6 +39,7 @@ page.extend({
 	bind: function(){
 		// 更新配置
 		$('#updateConfig').click(function(){
+			console.log('update event')
 			page.setCache();
 		})
 	},
@@ -47,6 +48,7 @@ page.extend({
 		lib.extend(app.config.config, {
 			// for server
 			serverEnable	: $('#serverEnable').prop('checked'),
+			serverApi		: $('#serverApi').val(),
 			serverPath		: $('#serverPath').val(),
 			localPath		: $('#localPath').val(),
 			key				: $('#key').val(),
@@ -65,7 +67,9 @@ page.extend({
 
 			if(docs.length == 0){
 				db.data.insert(app.config, function(e, doc){
+					if(e) return page.tips('配置更新失败');
 					app.config = doc;
+					page.tips('配置更新成功');
 				})
 			}else{
 				db.data.update({name: page.id}, app.config, function(e, num){

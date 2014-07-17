@@ -8,6 +8,9 @@
 			-else
 				input#serverEnable(type="checkbox")
 		label
+			span 服务器API：
+			input#serverApi(type="text" value="#{config.serverApi}")
+		label
 			span 服务器地址：
 			input#serverPath(type="text" value="#{config.serverPath}")
 		label

@@ -5,6 +5,8 @@ var path = require('path');
 var watch = require(path.join(root.app.dir, '../../Lab/src/watch'));
 var lib = require('linco.lab').lib;
 var db = require('../lib/db');
+var less2css = require('../lib/less2css');
+var upload = require('../lib/upload');
 var Page = require('../lib/page');
 var page = new Page;
 
@@ -182,12 +184,45 @@ page.extend({
 
 	// 创建项目监听
 	watch: function(obj){
-		var arr;
+		var arr, opt;
 
 		if(lib.isArray(obj)){
-			watch(obj, function(filename, stat){
-				console.log(filename)
-			})
+			opt = {
+				// 需要过滤的文件
+				filter: ['.DS_Store'],
+				// 不需要监听的目录
+				filterFolder: ['.svn' ,'.git', 'svn']
+			}
+
+			watch(obj, opt, function(filename){
+				var config = app.config.config;
+				var lessConfig = {};
+				var isLess = !!filename.match(/\.less$/);
+
+				// 编译less文件
+				if(isLess){
+					// for less config
+					lessConfig.defaultHome = config.defaultHome;
+					lessConfig.defaultCompress = config.defaultCompress;
+					config.defaultHome ?
+						lessConfig.isHome = 'home.less': lessConfig.isHome = false;
+
+					// compile
+					less2css(filename, lessConfig);
+				}
+
+				// 上传文件
+				// 检测服务器功能是否开启
+				if(!config.serverEnable){
+					return; //page.tips('尚未开启服务器功能，请在设置页进行配置')
+				}
+				// 检测服务器配置信息是否完整
+				if( config.serverApi && config.serverPath && config.localPath && config.key ){
+					return upload(filename, config);
+				}else{
+					return page.tips('尚未完成上传参数配置，请在设置页进行配置')
+				}
+			});
 		}
 		if(obj._id){
 			arr = [];
