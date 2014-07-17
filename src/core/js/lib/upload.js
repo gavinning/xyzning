@@ -3,7 +3,7 @@
 
 var fs = require('fs');
 var path = require('path');
-var lib = require('linco.lib/lib');
+var lib = require('linco.lab').lib;
 var request = require('request');
 
 // @url: 服务器地址
