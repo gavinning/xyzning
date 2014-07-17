@@ -2,36 +2,36 @@
 	.list-input
 		h2.title 服务器配置 
 		label
-			span 是否启用：
 			-if(config.serverEnable)
 				input#serverEnable(type="checkbox" checked="checked")
 			-else
 				input#serverEnable(type="checkbox")
+			span 启用服务器配置
 		label
-			span 服务器API：
+			span.block 服务器API：
 			input#serverApi(type="text" value="#{config.serverApi}")
 		label
-			span 服务器地址：
+			span.block 服务器地址：
 			input#serverPath(type="text" value="#{config.serverPath}")
 		label
-			span 本地根路径：
+			span.block 本地根路径：
 			input#localPath(type="text" value="#{config.localPath}")
 		label
-			span key：
+			span.block key：
 			input#key(type="password" value="#{config.key}")
 	.list-input
 		h2.title less配置 
 		label
-			span HOME模式：
 			-if(config.defaultHome)
 				input#defaultHome(type="checkbox" checked="checked")
 			-else
 				input#defaultHome(type="checkbox")
+			span 启用HOME模式
 		label
-			span 压缩模式：
 			-if(config.defaultCompress)
 				input#defaultCompress(type="checkbox" checked="checked")
 			-else
 				input#defaultCompress(type="checkbox")
+			span 启用压缩模式
 
 	button#updateConfig 更新配置

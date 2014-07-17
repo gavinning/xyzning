@@ -34,9 +34,11 @@ header,nav,aside,footer{display:block}
 .aside{width:236px;height:inherit;overflow:hidden;background:#e2e6ec;border-right:1px solid #b4b4b4;position:relative}.aside>.inner{position:absolute;left:0;top:0;width:100%;height:100%;overflow-x:hidden;overflow-y:auto}
 .main{-webkit-box-flex:1;height:inherit;overflow:hidden;position:relative}.main>.inner{position:absolute;left:0;top:0;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;display:-webkit-box}
 .footer{height:23px;border-top:1px solid #b8b8b8;display:-webkit-box}
-.list-folder li{height:40px;line-height:40px;padding:0 12px;border-bottom:1px solid #ccc;border-top:1px solid #fff}.list-folder li:first-child{border-top:none}
+.list-folder li{height:40px;line-height:40px;padding:0 12px;border-bottom:1px solid #ccc;border-top:1px solid #fff;position:relative}.list-folder li:first-child{border-top:none}
 .list-folder li:last-child{border-bottom:none}
 .list-folder li.selected{background:rgba(0,0,0,0.1)}
+.list-folder li .idel{display:block;position:absolute;top:0;right:0;background:rgba(0,0,0,0.03) url(../images/iclose2.png) no-repeat center;background-size:12px;width:40px;height:40px;display:none}
+.list-folder li:hover .idel{display:block}
 .list-images{padding:4px;-webkit-transform:translate3d(0, 0, 0);-webkit-box-flex:1;margin-right:160px}.list-images ul{overflow:hidden}
 .list-images li{-webkit-transform:translate3d(0, 0, 0);width:100px;height:160px;float:left;display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;background-size:cover;background-position:center top;border:2px solid #fff;position:relative}.list-images li.current{border-color:#038dfa}.list-images li.current .iselected{display:block}
 .list-images .iselected{width:30px;height:30px;position:absolute;right:10px;top:10px;display:none}
@@ -52,5 +54,9 @@ header,nav,aside,footer{display:block}
 .list-file i{display:block;font-size:10px;color:#999}
 .attr{position:absolute;right:0;top:0;width:200px;background:#eee;height:100%;transition:all 500ms ease;-webkit-transform:translate3d(210px, 0, 0)}.attr.show{-webkit-transform:translate3d(0, 0, 0)}
 .list-attr{box-sizing:border-box;padding:8px 12px}.list-attr label{display:block;padding:2px 0}.list-attr label span{font-size:12px;margin-left:6px}
-.list-input{box-sizing:border-box;width:100%;padding:8px 12px}.list-input label{display:-webkit-box;line-height:26px;padding:6px}.list-input label span{display:block;width:90px}
-.list-input input{width:600px;border:1px solid #ddd;height:26px;outline:none;padding:0 6px}
+.list-input{box-sizing:border-box;width:100%;padding:20px 40px}.list-input .title{color:#0095f8;font-size:16px;margin-bottom:6px;text-shadow:1px 1px 0 #ddd}
+.list-input label{display:block;line-height:26px;padding:0 12px}.list-input label span{font-size:12px;color:#999;margin-left:6px}
+.list-input label .block{display:block;margin-left:0}
+.list-input input{border:1px solid #ddd;outline:none;padding:0 6px}
+.list-input input[type="text"],.list-input input[type="password"]{height:26px;width:600px}
+#updateConfig{height:36px;width:200px;border:1px solid #fff;outline:none;margin-left:40px;font-size:16px;color:#fff;box-shadow:2px 2px 6px rgba(0,0,0,0.3);background:#51bbf6}#updateConfig:active{background:#35a5e4}

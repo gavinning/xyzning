@@ -152,6 +152,7 @@ header,nav,aside,footer{
 		padding: 0 12px;
 		border-bottom: 1px solid #ccc;
 		border-top: 1px solid #fff;
+		position: relative;
 
 		&:first-child{
 			border-top: none;
@@ -163,6 +164,24 @@ header,nav,aside,footer{
 
 		&.selected{
 			background: rgba(0,0,0,0.1)
+		}
+
+		.idel{
+			display: block;
+			position: absolute;
+			top: 0;
+			right: 0;
+			background: rgba(0,0,0,0.03) url(../images/iclose2.png) no-repeat center;
+			background-size: 12px;
+			width: 40px;
+			height: 40px;
+			display: none;
+		}
+
+		&:hover{
+			.idel{
+				display: block;
+			}
 		}
 	}
 }
@@ -330,25 +349,59 @@ header,nav,aside,footer{
 .list-input{
 	box-sizing: border-box;
 	width: 100%;
-	padding: 8px 12px;
+	padding: 20px 40px;
+
+	.title{
+		color: #0095F8;
+		font-size: 16px;
+		margin-bottom: 6px;
+		text-shadow: 1px 1px 0 #ddd;
+	}
 
 	label{
-		display: -webkit-box;
+		display: block;
 		line-height: 26px;
-		padding: 6px;
+		padding: 0 12px;
 
 		span{
+			font-size: 12px;
+			color: #999;
+			margin-left: 6px;
+		}
+
+		.block{
 			display: block;
-			width: 90px;
+			margin-left: 0;
 		}
 	}
 
 	input{
-		width: 600px;
 		border: 1px solid #ddd;
-		height: 26px;
 		outline: none;
 		padding: 0 6px;
+	}
+
+	input[type="text"], input[type="password"]{
+		height: 26px;
+		width: 600px;
+	}
+
+
+}
+
+#updateConfig{
+	height: 36px;
+	width: 200px;
+	border: 1px solid #fff;
+	outline: none;
+	margin-left: 40px;
+	font-size: 16px;
+	color: #fff;
+	box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+	background: #51BBF6;
+
+	&:active{
+		background: #35A5E4;
 	}
 }
 

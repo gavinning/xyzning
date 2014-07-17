@@ -63,6 +63,13 @@ page.extend({
 			// 读取配置项
 		});
 
+		// 删除项目
+		this.page.find('.list-folder').delegate('.idel', 'click', function(e){
+			e.preventDefault();
+			e.stopPropagation()
+			console.log(111)
+		});
+
 		live.extend({
 			init: function() {
 				
@@ -98,7 +105,7 @@ page.extend({
 
 				// 添加文件夹方法
 				function add(file){
-					ul.append('<li path="'+file.path+'">'+file.name+'</li>')
+					ul.append('<li path="'+file.path+'">'+file.name+'<i class="idel"></i></li>')
 				}
 
 				// 监听drag事件
@@ -189,7 +196,7 @@ page.extend({
 		if(lib.isArray(obj)){
 			opt = {
 				// 需要过滤的文件
-				filter: ['.DS_Store'],
+				filter: ['.DS_Store', '.svn-base'],
 				// 不需要监听的目录
 				filterFolder: ['.svn' ,'.git', 'svn']
 			}
@@ -238,7 +245,10 @@ page.extend({
 
 	dragCallback: function(filelist){
 		lib.each(filelist, function(i, item){
-			page.setCache(item.path)
+			// 更新数据缓存
+			page.setCache(item.path);
+			// 增加监听
+			page.watch([item.path]);
 		})
 	}
 
