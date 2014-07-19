@@ -81,7 +81,7 @@ page.extend({
 				if(!lib.isDir(src)) return;
 
 				// 遍历文件夹
-				files = lib.dir(src, ['.svn']).file;
+				files = lib.dir(src).files;
 				files.forEach(function(item){
 					if(item.match(/less$/g)){
 						cssArr.push(item)

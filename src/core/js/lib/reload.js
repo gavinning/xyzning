@@ -93,7 +93,7 @@ function reload(source){
 }
 
 function watch(file, files){
-	var folder = lib.dir(file.dirname).folder;
+	var folder = lib.dir(file.dirname).folders;
 	folder.push(file.dirname);
 
 	folder.forEach(function(item){

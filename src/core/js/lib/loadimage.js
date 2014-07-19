@@ -7,8 +7,7 @@ var lib = require('linco.lab').lib;
 function LoadImage(src, num, filter, reg){
 	// var file = lib.dir(src, [], new RegExp('\.jpg|\.png', 'g')).file;
 	var filter = filter || [];
-	var reg = reg || new RegExp('\.jpg|\.png', 'g');
-	var file = lib.dir(src, filter, reg).file;
+	var file = lib.dir(src, {filterFile: filter, onlyFile: ['123.jpg$']}).files;
 	var imgs;
 	var last;
 	var count = 0;

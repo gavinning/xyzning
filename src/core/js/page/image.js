@@ -10,7 +10,7 @@ var loadImage, LoadImage = require('../lib/loadimage');
 var Page = require('../lib/page');
 var page = new Page;
 
-var dragTargetFolder = "/Volumes/macdata/cate";
+var dragTargetFolder = "/Volumes/macdata/work/mark/cate";
 
 
 var selectImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAe1BMVEUAAAD///////////////////////////////////////////////////////////////8blfv///+23f5jt/whmPsdlvvK5/5Hqvyu2f4qnPs6pPyj1f2Cxf1bs/z0+v/////j8v9tvPxVsPyTzf13wf3T6v7a7v7r9v8SOWehAAAAEXRSTlMAT2fmjwUnF3TWWJTZvL27CNRr2pIAAAHTSURBVEjHpVZpk4IwDO0qyOGxwysUKIfj7f//hSsFCaVQ1vF9cBhJSPJempQZ8EJnv8YL670TemwBnh9AQ+B7NnMHL/CqLmSSyKKuOF7Yzrm4fmMdi2gAETc+vjtlvwkAnkUGshzYbUz7HyCNo0nEKfAztl8BeRLNQOTAyrAvIwvKtwflc46sOGtZbej7thh95e4OebSIHLs3uz5SsewgUvidvgDxOcNr3fwCrebbpYQy4NEmte0CZFb74glUnaOnKuBWe/noOeSqigDxQq1Ik64WBCojscD/Q76dm5xCe0YV8CwGWoTMQWUjFMBl6O6wPWoLoUe9yWr8sjVURFHLCUJPwFX7A2sGKMuyp4KQ3DHSVAIMUI8pDL0Fh/GV3oHkJFyBkxzFVA6yr09T8AYcs7HqgCpaIdYNLkSoXjTRWgGnon91BG5kSbQOhcuBe9LFHhFKwg1bI0kBLgZPBGoNaj76LsUiUPNp7Z21mV+7agjU3nSAiJuzSSgdIDqixD4pYpxtzxwCJUCaE2gIjMeM4DNjkMYM87Uek3x6jCf9IGNu8L9RGbifDuNPx/0XC+XDlUVLcWZ+1LQUx2s3X1i7Xy325avD95cTuv4c2uvPYer68webMIGKNytpEAAAAABJRU5ErkJggg==';

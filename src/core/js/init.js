@@ -4,7 +4,6 @@
 function init(){
 	var fs = require('fs');
 	var path = require('path');
-	var lib = require('linco.lab').lib;
 
 	var tips = require('./lib/tips');
 	var db = require('./lib/db');
