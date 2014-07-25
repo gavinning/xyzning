@@ -7,7 +7,7 @@ function init(){
 
 	var tips = require('./lib/tips');
 	var db = require('./lib/db');
-	// var reload = require('./lib/reload');
+	var reload = require('./lib/reload');
 	var scroll = require('./lib/scroll');
 	var drag = require('./lib/drag');
 	var pm = require('./lib/pm');
@@ -20,6 +20,7 @@ function init(){
 
 	// 缓存app信息
 	root.app = {
+		dev: true,
 		dir: process.cwd(),
 		tmp: window.gui.App.dataPath,
 
@@ -63,7 +64,7 @@ function init(){
 	});
 
 	// 监听项目资源，并根据规则自动渲染
-	// reload(path.join(app.dir, '/core/index.html'));
+	reload(path.join(app.dir, '/src/views/index.html'));
 	// 模拟滚动条测试
 	// scroll('#mainInner');
 

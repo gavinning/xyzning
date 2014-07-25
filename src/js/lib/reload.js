@@ -1,6 +1,5 @@
 'use strict';
 
-var rootPath = process.cwd();
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
@@ -18,9 +17,12 @@ var prevFilename = '';
 var render = {
 	// 自动编译less
 	less: function(source){
-		var url = path.join(rootPath, '/core/css/home.less');
+		var url = path.join(app.dir, '/src/css/home.less');
+		console.log(url)
 		console.log('compile home.less');
-		return exec('lessc ' + url + ' ' + url.replace('less', 'css') + ' -x');
+		return exec('lessc ' + url + ' ' + url.replace('less', 'css') + ' -x', function(){
+			console.log(arguments)
+		});
 	},
 	// 重新渲染css
 	css: function(source){
@@ -93,8 +95,8 @@ function reload(source){
 }
 
 function watch(file, files){
-	var folder = lib.dir(file.dirname).folder;
-	folder.push(file.dirname);
+	var folder = lib.dir(path.dirname(file.dirname)).folders;
+	folder.push(path.dirname(file.dirname));
 
 	folder.forEach(function(item){
 

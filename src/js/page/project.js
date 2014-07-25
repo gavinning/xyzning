@@ -10,6 +10,9 @@ var upload = require('../lib/upload');
 var Page = require('../lib/page');
 var page = new Page;
 
+// 用于替换路径中的.
+var srcSpace = "_LINCO_";
+
 page.extend({
 	// 页面id，唯一，关系页面逻辑
 	id: "project",
@@ -110,6 +113,8 @@ page.extend({
 
 				// 监听drag事件
 				lib.each(obj.aside, function(key, value){
+					key = key.replace(new RegExp(srcSpace, 'g'), '\.')
+					console.log(key)
 					if(lib.isDir(key)){
 						add(value);
 					}
@@ -146,9 +151,9 @@ page.extend({
 		// 更新aside节点对象
 		tmp = {
 			name: path.basename(src),
-			path: src,
-			isHome: $('#isHome').prop('checked'),
-			isCompress: $('#isCompress').prop('checked')
+			path: src//,
+			// isHome: $('#isHome').prop('checked'),
+			// isCompress: $('#isCompress').prop('checked')
 		};
 
 		// 更新数据
@@ -158,8 +163,12 @@ page.extend({
 				console.log(e, num)
 			})
 		}else{
+			console.log(src, 123)
+			src = src.replace(/\./g, srcSpace);
+			console.log(src, 456)
 			cache.aside[src] = tmp;
 			db.data.insert(cache, function(e, doc){
+				console.log(e, doc)
 				page._cache = doc;
 			})
 		}
@@ -245,6 +254,7 @@ page.extend({
 
 	dragCallback: function(filelist){
 		lib.each(filelist, function(i, item){
+			console.log(item)
 			// 更新数据缓存
 			page.setCache(item.path);
 			// 增加监听
