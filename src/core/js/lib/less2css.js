@@ -4,27 +4,79 @@
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
+var less = require('less')
+
+
+less.renderFile = function(file, compress, callback){
+	var parser = new(less.Parser)({
+		paths: [path.dirname(file), './lib'] // 指定@import搜索的目录
+	});
+
+	// parser.parse('.class { width: (1 + 1) }', function (e, tree) {
+	// 	tree.toCSS({
+	// 		// 压缩输出的CSS
+	// 		compress: compress
+	// 	});
+	// });
+
+
+	// 读less
+	fs.readFile(file, 'utf-8', function(e, data){
+		if(e) return console.log(e);
+		// 编译
+		// less.render(data, function(e, css){
+		// 	if(e) return console.log(e);
+
+		// 	fs.writeFile(file.replace('.less', '.css'), css, 'utf-8', function(e){
+		// 		if(e) return console.log(e);
+
+		// 		callback(e)
+		// 	})
+		// })
+
+		parser.parse(data, function (e, tree) {
+			if(e) return console.log(e)
+			var css = tree.toCSS({
+				// 压缩输出的CSS
+				compress: compress
+			});
+		
+			fs.writeFile(file.replace('.less', '.css'), css, 'utf-8', function(e){
+				if(e) return console.log(e);
+
+				callback(e)
+			})
+
+		});
+	})
+}
+
 
 function less2css(file, config){
 	var home;
-	var compress;
+	var compress = ' ';
 
 	config.defaultCompress ? compress = ' -x ' : compress = ' ';
 
 	// 如果未启用isHome模式，直接编译
 	if(!config.isHome){
-		return exec('lessc' + compress + file + ' ' + file.replace('.less', '.css'), function(e){
-			if(e) return console.log(e.message);
-			console.log(file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
-		});
+		// return exec(cmd, function(e){
+		// 	if(e) return console.log(e.message);
+		// 	console.log(file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
+		// });
+
+		less.renderFile(file, config.defaultCompress, function(e){
+			if(e) return console.log(e)
+			console.log('compile: ' + file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
+		})
 	}
 
 	// 如果已启用isHome模式，并文件为HOME文件，直接编译
 	if(config.isHome == path.basename(file)){
-		return exec('lessc' + compress + file + ' ' + file.replace('.less', '.css'), function(e){
-			if(e) return console.log(e.message);
-			console.log(file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
-		});
+		less.renderFile(file, config.defaultCompress, function(e){
+			if(e) return console.log(e)
+			console.log('compile: ' + file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
+		})
 	}
 
 	// 搜索HOME文件
@@ -35,11 +87,10 @@ function less2css(file, config){
 		return console.log('Can\'t find ' + config.isHome);
 	}
 	
-	// 编译父级HOME文件
-	exec('lessc' + compress + home + ' ' + home.replace('.less', '.css'), function(e){
-		if(e) return console.log(e.message);
-		console.log(home + ' => ' + home.replace('.less', '.css') + ' done.')
-	});
+	less.renderFile(home, config.defaultCompress, function(e){
+		if(e) return console.log(e)
+		console.log('compile: ' + home + ' => ' + path.basename(home).replace('.less', '.css') + ' done.')
+	})
 }
 
 function soHome(file, config){

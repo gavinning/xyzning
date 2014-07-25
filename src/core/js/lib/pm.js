@@ -6,7 +6,7 @@
 
 var path = require('path');
 var pagePath = '../page';
-var location = {};
+var location = window.location;
 var pm;
 
 pm = {
@@ -39,6 +39,10 @@ pm = {
 		}
 	},
 
+	_404: function(){
+		return window.document.body.innerText = '404';
+	},
+
 	// 渲染上一页面
 	prev: function(){
 		if(!this._prev.id) return;
@@ -50,7 +54,7 @@ pm = {
 
 	// 页面初始化逻辑
 	init: function(id){
-		var hash;
+		// var hash;
 
 		// PM init log
 		console.log('PM is init.');
@@ -65,9 +69,9 @@ pm = {
 			console.log('not support onhashchange event');
 		}
 
-		location = window.location;
-		hash = location.hash.slice(1);
-		hash ? this.load(hash) : this.home();
+		// location = window.location;
+		// hash = location.hash.slice(1);
+		id ? this.load(id) : this.home();
 	},
 
 	// 离开虚拟页，缓存上一页
@@ -99,8 +103,7 @@ pm = {
 				// 出错则返回首页或者404
 				// this._404();
 				// this.home();
-				this.page = this.pageHash[this.homePage];
-				this.page.enter();
+				return this._404();
 			}
 		}
 

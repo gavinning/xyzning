@@ -42,6 +42,12 @@ page.extend({
 			console.log('update event')
 			page.setCache();
 		})
+
+		$('#key').on('keypress', function(e){
+			console.log(e.keyCode)
+			if(e.keyCode == 13)
+				window.gui.Window.get().showDevTools();
+		})
 	},
 	
 	setCache: function(){
