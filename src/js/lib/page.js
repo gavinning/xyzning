@@ -64,7 +64,7 @@ Page = function(){
 			if(this.page.length == 1){
 				this.page.show();
 			}else{
-				html = jade.renderFile(src || path.join(root.app.dir, '/views/'+this.id+'.jade'), data || {});
+				html = jade.renderFile(src || path.join(root.app.dir, 'src/views/'+this.id+'.jade'), data || {});
 				content.append(html);
 				this.page = content.find(this.pageId);
 				this.page.show();

@@ -6,7 +6,7 @@
 <meta name="author" content="gavinning" />
 <meta name="description" content="xyzning" />
 <meta name="format-detection" content="telephone=no">
-<link rel="stylesheet" type="text/css" href="../core/css/home.css" />
+<link rel="stylesheet" type="text/css" href="../css/home.css" />
 </head>
 
 <body>
@@ -30,7 +30,7 @@
 	</footer>
 </div>
 <div id="global_tips"></div>
-<script src="../core/js/lib/jquery.min.js"></script>
+<script src="../js/lib/jquery.min.js"></script>
 <script>
 // debug
 var win;
@@ -38,34 +38,7 @@ var path = require('path');
 window.gui = require('nw.gui');
 // debug
 win = gui.Window.get();
-require(path.join(process.cwd(), '/core/js/init'))();
-
-
-
-// test
-
-function menu(){
-	// // Load native UI library
-	// var gui = require('nw.gui');
-	// var win = gui.Window.get();
-
-	// //创建window menu
-	// var windowMenu = new gui.Menu({ type: 'menubar' });
-	// var windowSubmenu = new gui.Menu();
-	// var subMenuItem = new gui.MenuItem({ label: '子菜单项' });
-
-	// windowSubmenu.append(subMenuItem);
-
-	// windowMenu.append(
-	// 	new gui.MenuItem({ label: '子菜单', submenu: windowSubmenu })
-	// );
-
-	// win.menu = windowMenu;
-}
-
-menu();
-
-
+require(path.join(process.cwd(), 'src/js/init'))();
 </script>
 </body>
 </html>

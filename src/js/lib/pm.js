@@ -99,7 +99,7 @@ pm = {
 			try{
 				require(path.join(pagePath, id));
 			}catch(e){
-				console.error(e);
+				return console.error(e);
 				// 出错则返回首页或者404
 				// this._404();
 				// this.home();

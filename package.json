@@ -2,7 +2,7 @@
   "name": "xyzning",
   "version": "0.0.10",
   "description": "集成项目文件监听变更，上传测试服务器，less编译，图片压缩，base64转码等",
-  "main": "index.js",
+  "main": "./src/views/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -32,5 +32,26 @@
     "url": "https://github.com/gavinning/xyzning/issues"
   },
   "homepage": "https://github.com/gavinning/xyzning",
-  "readmeFilename": "Readme.md"
+  "readmeFilename": "Readme.md",
+  "window": {
+    "debug": false,
+    "title": "ilinco xyzning",
+    "icon": "icon/icon.png",
+    "toolbar": false,
+    "frame": true,
+    "width": 1030,
+    "height": 700,
+    "position": "center",
+    "min_width": 800,
+    "min_height": 600,
+    "show_in_taskbar": true
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "maintainers":[ {
+    "name": "gavinning",
+    "email": "admin@ilinco.com",
+    "web": "http://www.ilinco.com"
+  }]
 }

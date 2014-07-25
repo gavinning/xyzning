@@ -2,7 +2,7 @@
 
 // 页面实例
 var path = require('path');
-var watch = require(path.join(root.app.dir, '../../Lab/src/watch'));
+var watch = require('linco.lab').watch;
 var lib = require('linco.lab').lib;
 var db = require('../lib/db');
 var less2css = require('../lib/less2css');
