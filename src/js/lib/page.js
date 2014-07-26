@@ -46,7 +46,9 @@ Page = function(){
 		// 页面实例离开方法
 		leave: function(){
 			this.page ? "" : this.page = $(this.pageId);
+			this._log ? "" : this._log = $(this.logId);
 			this.page.hide();
+			this._log.hide();
 		},
 
 		// 页面回退方法，默认调用系统回退
@@ -69,6 +71,45 @@ Page = function(){
 				this.page = content.find(this.pageId);
 				this.page.show();
 			}
+		},
+
+		// 全局tips模块占位
+		tips: function(msg){
+			tips.show(msg)
+		},
+
+		// 页面log
+		log: function(msg, error){
+			this.logId = this.id + 'Log';
+			this._log = $('#' + this.logId);
+
+			// 检查页面切换
+			if(!msg && this._lastLog){
+				return this.log(this._lastLog, this._lastLogError);
+			}
+
+			// 检查空日志
+			if(!msg) return;
+
+			// 检查当前页面logDOM
+			if(this._log.length == 0){
+				app.log.append('<div id="'+this.logId+'" class="log"></div>');
+				this._log = $('#' + this.logId);
+			}
+
+			// 检查是否是警告消息
+			if(error){
+				this._log.addClass('error');
+			}else{
+				this._log.removeClass('error');
+			}
+
+			// 错误插入检查
+			if(this._log.length > 1){
+				console.error('页面logDOM插入错误')
+			}
+
+			this._log.text(msg).show();
 		},
 
 		cache: function(){
@@ -114,11 +155,6 @@ Page = function(){
 
 // 虚拟页面公共方法
 Page.prototype = {
-	// 全局tips模块占位
-	tips: function(msg){
-		tips.show(msg)
-	},
-
 	// 统计方法
 	stats: function(){
 

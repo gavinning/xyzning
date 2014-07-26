@@ -10,9 +10,6 @@ var upload = require('../lib/upload');
 var Page = require('../lib/page');
 var page = new Page;
 
-// 用于替换路径中的.
-var srcSpace = "_LINCO_";
-
 page.extend({
 	// 页面id，唯一，关系页面逻辑
 	id: "project",
@@ -42,8 +39,10 @@ page.extend({
 	enter: function(){
 		// 渲染页面
 		this.render();
+		this.log();
 	},
 
+	// 页面内方法绑定
 	bind: function(){
 		var _this = this;
 		var live = this.live;
@@ -70,7 +69,8 @@ page.extend({
 		this.page.find('.list-folder').delegate('.idel', 'click', function(e){
 			e.preventDefault();
 			e.stopPropagation()
-			console.log(111)
+			e.target.parentNode.remove();
+			live.delProject(e.target.parentNode.getAttribute('path'));
 		});
 
 		live.extend({
@@ -78,6 +78,7 @@ page.extend({
 				
 			},
 
+			// 渲染文件夹文件列表
 			renderFolder: function(src){
 				var files, cssArr = [];
 
@@ -94,6 +95,7 @@ page.extend({
 				_this.page.find('.list-file ul').html(this.list(cssArr));
 			},
 
+			// 创建li列表
 			list: function(arr){
 				var ul = $(window.document.createElement('ul'));
 				arr.forEach(function(item){
@@ -103,6 +105,7 @@ page.extend({
 				return ul.html();
 			},
 
+			// 渲染侧栏项目列表
 			renderAside: function(obj){
 				var ul = _this.page.find('.list-folder ul');
 
@@ -113,12 +116,27 @@ page.extend({
 
 				// 监听drag事件
 				lib.each(obj.aside, function(key, value){
-					key = key.replace(new RegExp(srcSpace, 'g'), '\.')
-					console.log(key)
-					if(lib.isDir(key)){
+					// 反格式化路径
+					key = live.unformatURL(key);
+					if(value && lib.isDir(key)){
 						add(value);
 					}
 				})
+			},
+
+			// 删除项目
+			delProject: function(src){
+				page.setCache(src, true)
+			},
+
+			// 格式化项目url，用于转移带.路径，便于nedb存储
+			formatURL: function(src){
+				return src.replace(/\./g, '_LINCO_')
+			},
+
+			// 反格式化项目url
+			unformatURL: function(src){
+				return src.replace(new RegExp('_LINCO_', 'g'), '\.')
 			}
 		});
 	},
@@ -132,9 +150,10 @@ page.extend({
 	},
 
 	// 缓存数据
-	setCache: function(src){
-		var cache, tmp;
+	setCache: function(src, del){
+		var cache, tmp, _src;
 
+		// 缓存数据模型
 		cache = {
 			type: "page",
 			name: "project",
@@ -150,7 +169,9 @@ page.extend({
 
 		// 更新aside节点对象
 		tmp = {
+			// 设置项目名称
 			name: path.basename(src),
+			// 设置项目路径
 			path: src//,
 			// isHome: $('#isHome').prop('checked'),
 			// isCompress: $('#isCompress').prop('checked')
@@ -158,18 +179,28 @@ page.extend({
 
 		// 更新数据
 		if(page._cache){
-			page._cache.aside[src] = tmp;
+			// 删除项目存储
+			if(del) tmp = null;
+			// 格式化项目路径
+			_src = page.live.formatURL(src);
+			// 设置项目缓存
+			page._cache.aside[_src] = tmp;
+			// 项目写入数据库
 			db.data.update({name: "project"}, page._cache, function(e, num){
-				console.log(e, num)
+				if(e) return page.log('数据库写入失败：' + e.message, true);
+				return del ?
+					page.log('del: ' + src):
+					page.log('add: ' + src);
 			})
+
+		// 插入新纪录
 		}else{
-			console.log(src, 123)
-			src = src.replace(/\./g, srcSpace);
-			console.log(src, 456)
-			cache.aside[src] = tmp;
+			_src = page.live.formatURL(src);
+			cache.aside[_src] = tmp;
 			db.data.insert(cache, function(e, doc){
-				console.log(e, doc)
+				if(e) return page.log('数据库写入失败：' + e.message, true);
 				page._cache = doc;
+				page.log('add: ' + src)
 			})
 		}
 	},
@@ -181,6 +212,8 @@ page.extend({
 		// 加载数据
 		db.data.find(obj, function(e, docs){
 			if(docs.length==0) return;
+
+			console.log(docs)
 
 			// 缓存页面data对象
 			page._cache = docs[0];
@@ -202,14 +235,16 @@ page.extend({
 	watch: function(obj){
 		var arr, opt;
 
+		// 检查是否为路径数组
 		if(lib.isArray(obj)){
 			opt = {
 				// 需要过滤的文件
 				filter: ['.DS_Store', '.svn-base'],
 				// 不需要监听的目录
-				filterFolder: ['.svn' ,'.git', 'svn']
+				filterFolder: ['.svn' ,'.git']
 			}
 
+			// 启动监听
 			watch(obj, opt, function(filename){
 				var config = app.config.config;
 				var lessConfig = {};
@@ -224,7 +259,17 @@ page.extend({
 						lessConfig.isHome = 'home.less': lessConfig.isHome = false;
 
 					// compile
-					less2css(filename, lessConfig);
+					less2css(filename, lessConfig, function(e, source, target){
+						if(e){
+							page._lastLog = makeMessage(e);
+							page._lastLogError = true;
+						}else{
+							page._lastLog = makeMessage([source, target])
+							page._lastLogError = false;
+						}
+						
+						page.log(page._lastLog, page._lastLogError);
+					});
 				}
 
 				// 上传文件
@@ -238,23 +283,44 @@ page.extend({
 				}else{
 					return page.tips('尚未完成上传参数配置，请在设置页进行配置')
 				}
+
+				// 打包时间信息
+				function makeTime(){
+					return '['+ lib.now() +'] ';
+				}
+				// 打包less编译日志信息
+				function makeMessage(msg){
+					if(msg.message){
+						return makeTime() + [msg.message, 'line '+msg.line].join(', ') + msg.extract.join(' ');
+					}
+					if(msg.length == 2){
+						return makeTime() + 'compile: '+msg[0]+' => '+path.basename(msg[1]) + ' done.'
+					}
+				}
 			});
 		}
+
+		// 检查数据库对象
 		if(obj._id){
 			arr = [];
 			lib.each(obj.aside, function(key, value){
-				arr.push(value.path);
+				if(value)
+					arr.push(value.path);
 			})
+			// 启动监听
 			this.watch(arr);
 		}
+
+		// 包装字符串路径，启动监听
 		if(lib.isString(obj)){
 			this.watch([obj])
 		}
 	},
 
+	// 页面拖拽回调
+	// 也可以完整自定义drag方法
 	dragCallback: function(filelist){
 		lib.each(filelist, function(i, item){
-			console.log(item)
 			// 更新数据缓存
 			page.setCache(item.path);
 			// 增加监听

@@ -8,43 +8,28 @@ var less = require('less')
 
 
 less.renderFile = function(file, compress, callback){
+	var target = file.replace('.less', '.css');
 	var parser = new(less.Parser)({
 		paths: [path.dirname(file), './lib'] // 指定@import搜索的目录
 	});
 
-	// parser.parse('.class { width: (1 + 1) }', function (e, tree) {
-	// 	tree.toCSS({
-	// 		// 压缩输出的CSS
-	// 		compress: compress
-	// 	});
-	// });
-
+	callback = callback || function(){};
 
 	// 读less
 	fs.readFile(file, 'utf-8', function(e, data){
-		if(e) return console.log(e);
-		// 编译
-		// less.render(data, function(e, css){
-		// 	if(e) return console.log(e);
-
-		// 	fs.writeFile(file.replace('.less', '.css'), css, 'utf-8', function(e){
-		// 		if(e) return console.log(e);
-
-		// 		callback(e)
-		// 	})
-		// })
+		if(e) return callback(e);
 
 		parser.parse(data, function (e, tree) {
-			if(e) return console.log(e)
+			if(e) return callback(e);
 			var css = tree.toCSS({
 				// 压缩输出的CSS
 				compress: compress
 			});
 		
-			fs.writeFile(file.replace('.less', '.css'), css, 'utf-8', function(e){
+			fs.writeFile(target, css, 'utf-8', function(e){
 				if(e) return console.log(e);
 
-				callback(e)
+				callback(e, file, target);
 			})
 
 		});
@@ -52,7 +37,7 @@ less.renderFile = function(file, compress, callback){
 }
 
 
-function less2css(file, config){
+function less2css(file, config, callback){
 	var home;
 	var compress = ' ';
 
@@ -65,18 +50,12 @@ function less2css(file, config){
 		// 	console.log(file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
 		// });
 
-		less.renderFile(file, config.defaultCompress, function(e){
-			if(e) return console.log(e)
-			console.log('compile: ' + file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
-		})
+		less.renderFile(file, config.defaultCompress, callback)
 	}
 
 	// 如果已启用isHome模式，并文件为HOME文件，直接编译
 	if(config.isHome == path.basename(file)){
-		less.renderFile(file, config.defaultCompress, function(e){
-			if(e) return console.log(e)
-			console.log('compile: ' + file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
-		})
+		less.renderFile(file, config.defaultCompress, callback)
 	}
 
 	// 搜索HOME文件
@@ -87,10 +66,7 @@ function less2css(file, config){
 		return console.log('Can\'t find ' + config.isHome);
 	}
 	
-	less.renderFile(home, config.defaultCompress, function(e){
-		if(e) return console.log(e)
-		console.log('compile: ' + home + ' => ' + path.basename(home).replace('.less', '.css') + ' done.')
-	})
+	less.renderFile(home, config.defaultCompress, callback)
 }
 
 function soHome(file, config){

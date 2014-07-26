@@ -7,7 +7,7 @@ function init(){
 
 	var tips = require('./lib/tips');
 	var db = require('./lib/db');
-	var reload = require('./lib/reload');
+	// var reload = require('./lib/reload');
 	var scroll = require('./lib/scroll');
 	var drag = require('./lib/drag');
 	var pm = require('./lib/pm');
@@ -21,10 +21,14 @@ function init(){
 	// 缓存app信息
 	root.app = {
 		dev: true,
+		// 注册app根目录
 		dir: process.cwd(),
+		// 注册app数据缓存目录
 		tmp: window.gui.App.dataPath,
+		// 注册logDOM
+		log: window.$('#log'),
 
-		// 默认配置信息
+		// 注册默认配置信息
 		config: {
 			type: "page",
 			name: "config",
@@ -64,7 +68,7 @@ function init(){
 	});
 
 	// 监听项目资源，并根据规则自动渲染
-	reload(path.join(app.dir, '/src/views/index.html'));
+	// reload(path.join(app.dir, '/src/views/index.html'));
 	// 模拟滚动条测试
 	// scroll('#mainInner');
 
