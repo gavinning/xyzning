@@ -243,6 +243,22 @@ page.extend({
 	watch: function(obj){
 		var arr;
 
+		// 检查数据库对象
+		if(obj._id){
+			arr = [];
+			lib.each(obj.aside, function(key, value){
+				if(value)
+					arr.push(value.path);
+			})
+			// 启动监听
+			return this.watch(arr);
+		}
+
+		// 包装字符串路径，启动监听
+		if(lib.isString(obj)){
+			return this.watch([obj])
+		}
+
 		// 检查是否为路径数组
 		if(lib.isArray(obj)){
 
@@ -286,37 +302,21 @@ page.extend({
 					return page.tips('尚未完成上传参数配置，请在设置页进行配置')
 				}
 
-				// 打包时间信息
-				function makeTime(){
-					return '['+ lib.now() +'] ';
-				}
+
 				// 打包less编译日志信息
 				function makeMessage(msg){
+					// 打包错误日志
 					if(msg.message){
-						return makeTime() + [msg.message, 'line '+msg.line].join(', ') + msg.extract.join(' ');
+						return [msg.message, 'line '+msg.line].join(', ') + msg.extract.join(' ');
 					}
+					// 打包正确编译日志
 					if(msg.length == 2){
-						return makeTime() + 'compile: '+msg[0]+' => '+path.basename(msg[1]) + ' done.'
+						return 'compile: '+msg[0]+' => '+path.basename(msg[1]) + ' done.'
 					}
 				}
 			});
 		}
 
-		// 检查数据库对象
-		if(obj._id){
-			arr = [];
-			lib.each(obj.aside, function(key, value){
-				if(value)
-					arr.push(value.path);
-			})
-			// 启动监听
-			this.watch(arr);
-		}
-
-		// 包装字符串路径，启动监听
-		if(lib.isString(obj)){
-			this.watch([obj])
-		}
 	},
 
 	// 页面拖拽回调
@@ -334,7 +334,9 @@ page.extend({
 			page.watch([item.path]);
 
 		})
-	}
+	},
+
+	cache: {}
 
 
 });

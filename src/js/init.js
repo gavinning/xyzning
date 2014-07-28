@@ -4,6 +4,7 @@
 function init(){
 	var fs = require('fs');
 	var path = require('path');
+	var lib = require('linco.lab').lib;
 
 	var tips = require('./lib/tips');
 	var db = require('./lib/db');
@@ -11,8 +12,6 @@ function init(){
 	var drag = require('./lib/drag');
 	var pm = require('./lib/pm');
 	var location = window.location;
-
-	console.log(root.process.title)
 	
 	// 检测nodejs环境
 	try{
@@ -34,6 +33,11 @@ function init(){
 		logDom: window.$('#log'),
 		// 存放日志的数组
 		logArr: [],
+		// 注册lib方便测试调用
+		// 正式使用推荐直接require
+		lib: lib,
+		// 注册cache对象
+		cache: {},
 
 		doc: window.$(window.document),
 
@@ -92,6 +96,9 @@ function init(){
 
 	// for log
 	app.doc.on('log', function(e, msg, error){
+		// 包装时间戳
+		msg = '['+lib.now()+'] ' + msg;
+
 		// 缓存日志
 		app.logArr.push({data: msg, error: error})
 		// 展示页面日志

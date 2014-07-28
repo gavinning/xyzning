@@ -45,17 +45,12 @@ function less2css(file, config, callback){
 
 	// 如果未启用isHome模式，直接编译
 	if(!config.isHome){
-		// return exec(cmd, function(e){
-		// 	if(e) return console.log(e.message);
-		// 	console.log(file + ' => ' + path.basename(file).replace('.less', '.css') + ' done.')
-		// });
-
-		less.renderFile(file, config.defaultCompress, callback)
+		return less.renderFile(file, config.defaultCompress, callback)
 	}
 
 	// 如果已启用isHome模式，并文件为HOME文件，直接编译
 	if(config.isHome == path.basename(file)){
-		less.renderFile(file, config.defaultCompress, callback)
+		return less.renderFile(file, config.defaultCompress, callback)
 	}
 
 	// 搜索HOME文件
