@@ -7,15 +7,20 @@ function init(){
 
 	var tips = require('./lib/tips');
 	var db = require('./lib/db');
-	// var reload = require('./lib/reload');
 	var scroll = require('./lib/scroll');
 	var drag = require('./lib/drag');
 	var pm = require('./lib/pm');
 	var location = window.location;
+
+	console.log(root.process.title)
 	
 	// 检测nodejs环境
-	if(!root || root.root !== root){
-		return console.log(root + ' is not nodejs root');
+	try{
+		if(root.process.title !== 'node'){
+			return console.log(root + ' is not nodejs root');
+		}
+	}catch(e){
+		return console.log(e)
 	}
 
 	// 缓存app信息
@@ -26,7 +31,11 @@ function init(){
 		// 注册app数据缓存目录
 		tmp: window.gui.App.dataPath,
 		// 注册logDOM
-		log: window.$('#log'),
+		logDom: window.$('#log'),
+		// 存放日志的数组
+		logArr: [],
+
+		doc: window.$(window.document),
 
 		// 注册默认配置信息
 		config: {
@@ -67,8 +76,7 @@ function init(){
 		pm.page.drag(e.dataTransfer.files, e.target, e)
 	});
 
-	// 监听项目资源，并根据规则自动渲染
-	// reload(path.join(app.dir, '/src/views/index.html'));
+
 	// 模拟滚动条测试
 	// scroll('#mainInner');
 
@@ -81,6 +89,21 @@ function init(){
 			$(this).addClass('selected').siblings('.selected').removeClass('selected');
 		}
 	})
+
+	// for log
+	app.doc.on('log', function(e, msg, error){
+		// 缓存日志
+		app.logArr.push({data: msg, error: error})
+		// 展示页面日志
+		pm.page.log(msg, error)
+		// 设置页面最后日志信息，用于页面切换
+		pm.page._lastLog = msg;
+		pm.page._lastLogError = error;
+	})
+
+	app.log = function(arr){
+		return app.doc.trigger('log', arr);
+	}
 
 };
 

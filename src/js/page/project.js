@@ -145,7 +145,10 @@ page.extend({
 	buildAsideHash: function(obj){
 		page.asideHash = page.asideHash || {};
 		lib.each(obj.aside, function(key, value){
-			page.asideHash[key] = true;
+			// 反格式化url
+			key = page.live.unformatURL(key)
+			if(value)
+				page.asideHash[key] = true;
 		})
 	},
 
@@ -187,10 +190,17 @@ page.extend({
 			page._cache.aside[_src] = tmp;
 			// 项目写入数据库
 			db.data.update({name: "project"}, page._cache, function(e, num){
-				if(e) return page.log('数据库写入失败：' + e.message, true);
-				return del ?
-					page.log('del: ' + src):
-					page.log('add: ' + src);
+				if(e) return app.doc.trigger('log', ['数据库写入失败：' + e.message, true])
+
+				if(del){
+					// 广播日志
+					app.doc.trigger('log', ['del: ' + src])
+					// 删除项目列表hash
+					page.asideHash[src] = false;
+				}else{
+					// 广播日志
+					app.doc.trigger('log', ['add: ' + src])
+				}
 			})
 
 		// 插入新纪录
@@ -198,9 +208,9 @@ page.extend({
 			_src = page.live.formatURL(src);
 			cache.aside[_src] = tmp;
 			db.data.insert(cache, function(e, doc){
-				if(e) return page.log('数据库写入失败：' + e.message, true);
+				if(e) return app.doc.trigger('log', ['数据库写入失败：' + e.message, true])
 				page._cache = doc;
-				page.log('add: ' + src)
+				app.doc.trigger('log', ['add: ' + src])
 			})
 		}
 	},
@@ -212,8 +222,6 @@ page.extend({
 		// 加载数据
 		db.data.find(obj, function(e, docs){
 			if(docs.length==0) return;
-
-			console.log(docs)
 
 			// 缓存页面data对象
 			page._cache = docs[0];
@@ -233,19 +241,13 @@ page.extend({
 
 	// 创建项目监听
 	watch: function(obj){
-		var arr, opt;
+		var arr;
 
 		// 检查是否为路径数组
 		if(lib.isArray(obj)){
-			opt = {
-				// 需要过滤的文件
-				filter: ['.DS_Store', '.svn-base'],
-				// 不需要监听的目录
-				filterFolder: ['.svn' ,'.git']
-			}
 
 			// 启动监听
-			watch(obj, opt, function(filename){
+			watch(obj, function(filename){
 				var config = app.config.config;
 				var lessConfig = {};
 				var isLess = !!filename.match(/\.less$/);
@@ -268,7 +270,7 @@ page.extend({
 							page._lastLogError = false;
 						}
 						
-						page.log(page._lastLog, page._lastLogError);
+						app.doc.trigger('log', [page._lastLog, page._lastLogError])
 					});
 				}
 
@@ -321,10 +323,16 @@ page.extend({
 	// 也可以完整自定义drag方法
 	dragCallback: function(filelist){
 		lib.each(filelist, function(i, item){
+			var src = page.live.formatURL(item.path);
+
+			// 过滤已存在的项目
+			if(page._cache.aside[src]) return app.doc.trigger('log', ['已存在: '  + item.path + ' 无需重复添加']);
+
 			// 更新数据缓存
 			page.setCache(item.path);
 			// 增加监听
 			page.watch([item.path]);
+
 		})
 	}
 

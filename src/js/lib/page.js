@@ -93,7 +93,7 @@ Page = function(){
 
 			// 检查当前页面logDOM
 			if(this._log.length == 0){
-				app.log.append('<div id="'+this.logId+'" class="log"></div>');
+				app.logDom.append('<div id="'+this.logId+'" class="log"></div>');
 				this._log = $('#' + this.logId);
 			}
 
@@ -133,8 +133,8 @@ Page = function(){
 
 			// 添加文件夹方法
 			function add(file){
-				// console.log(file, ul)
-				ul.append('<li path="'+file.path+'">'+file.name+'</li>')
+				ul.append('<li path="'+file.path+'">'+file.name+'<i class="idel"></i></li>')
+
 			}
 
 			// 监听drag事件
