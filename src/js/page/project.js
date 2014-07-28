@@ -326,7 +326,7 @@ page.extend({
 			var src = page.live.formatURL(item.path);
 
 			// 过滤已存在的项目
-			if(page._cache.aside[src]) return app.doc.trigger('log', ['已存在: '  + item.path + ' 无需重复添加']);
+			if(page._cache && page._cache.aside && page._cache.aside[src]) return app.doc.trigger('log', ['已存在: '  + item.path + ' 无需重复添加']);
 
 			// 更新数据缓存
 			page.setCache(item.path);
