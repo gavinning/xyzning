@@ -26,7 +26,6 @@ page.extend({
 	bind: function(){
 
 		app.doc.on('log', function(e, msg, error){
-			console.log(123)
 			// 包装时间戳
 			msg = '['+lib.now()+'] ' + msg;
 			return page.add(msg, error);

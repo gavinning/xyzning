@@ -28,9 +28,14 @@ function post(url, file, src, key){
 	};
 
 	req = request(opt, function(e, res, body){
-		e ?
-			console.log(e.message):
+		// 接入app日志模块
+		if(e){
+			app.log([e.message, true])
+			console.log(e)
+		}else{
+			app.log(['已写入：' + body])
 			console.log('已写入：' + body);
+		}
 	});
 
 	form = req.form();
