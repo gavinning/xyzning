@@ -296,12 +296,24 @@ page.extend({
 					return; //page.tips('尚未开启服务器功能，请在设置页进行配置')
 				}
 				// 检测服务器配置信息是否完整
-				if( config.serverApi && config.serverPath && config.localPath && config.key ){
-					return upload(filename, config);
+				if( config.serverApi && config.username && config.password && hasWorkplace(config.workplace) ){
+					return upload(filename);
 				}else{
 					return page.tips('尚未完成上传参数配置，请在设置页进行配置')
 				}
 
+				// 检查是否存在完整的workplace配置
+				function hasWorkplace(arr){
+					if(!arr) return false;
+
+					if(!arr.length) return false;
+
+					if(arr.length > 0){
+						return arr.some(function(item){
+							return item.server && item.local
+						})
+					}
+				}
 
 				// 打包less编译日志信息
 				function makeMessage(msg){
