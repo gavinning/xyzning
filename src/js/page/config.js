@@ -43,23 +43,65 @@ page.extend({
 			page.setCache();
 		})
 
-		$('#key').on('keypress', function(e){
-			console.log(e.keyCode)
-			if(e.keyCode == 13)
-				window.gui.Window.get().showDevTools();
+		// $('#key').on('keypress', function(e){
+		// 	console.log(e.keyCode)
+		// 	if(e.keyCode == 13)
+		// 		window.gui.Window.get().showDevTools();
+		// })
+
+		this.page.delegate('.workplace-title', 'click', function(){
+			var parent = $(this).parent()
+			var serverPath, localPath, iurl;
+
+			// 更新workplace状态
+			if(parent.hasClass('slide')){
+				parent.removeClass('slide')
+			}else{
+				parent.addClass('slide')
+
+				// 检查serverPath, localPath value值
+				serverPath = parent.find('.serverPath').val();
+				localPath = parent.find('.localPath').val();
+				iurl = parent.find('.iurl')
+				// 展示url
+				if(serverPath && localPath && !iurl.html()){
+					iurl.html(localPath)
+				}
+				// 隐藏url
+				if(!serverPath || !localPath){
+					iurl.html('')
+				}
+			}
+		})
+
+		$('#addWorkplace').click(function(){
+			$(this).before($('#workplaceTemplate').html())
 		})
 	},
 	
 	setCache: function(){
+		var workplace = [];
+
+		// 获取workplace
+		$('.workplace').each(function(){
+			var obj = {};
+			obj.server = $(this).find('.serverPath').val();
+			obj.local = $(this).find('.localPath').val();
+
+			if(obj.server && obj.local)
+				workplace.push(obj)
+		})
+
 		lib.extend(app.config.config, {
 			// for server
 			serverEnable	: $('#serverEnable').prop('checked'),
 			serverApi		: $('#serverApi').val(),
-			serverPath		: $('#serverPath').val(),
-			localPath		: $('#localPath').val(),
-			key				: $('#key').val(),
+			username		: $('#username').val(),
+			password		: $('#password').val(),
+			workplace		: workplace,
 
 			// for less
+			lessEnable		: $('#lessEnable').prop('checked'),
 			defaultHome		: $('#defaultHome').prop('checked'),
 			defaultCompress	: $('#defaultCompress').prop('checked')
 		});

@@ -97,6 +97,7 @@ header,nav,aside,footer{
 
 	.vp-config{
 		display: block;
+		overflow: scroll;
 	}
 }
 
@@ -339,7 +340,7 @@ header,nav,aside,footer{
 .list-input{
 	box-sizing: border-box;
 	width: 100%;
-	padding: 20px 40px;
+	padding: 20px 40px 0;
 
 	.title{
 		color: #0095F8;
@@ -373,18 +374,90 @@ header,nav,aside,footer{
 
 	input[type="text"], input[type="password"]{
 		height: 26px;
-		width: 600px;
+		width: 400px;
+		display: block;
+		margin: 0 0 5px;
 	}
 
+	.username, .password{
+		display: inline;
+		width: 190px;
+		margin-right: 6px;
+	}
+
+	.workplace{
+		height: 88px;
+		overflow: hidden;
+		line-height: 26px;
+		transition: all 300ms ease 100ms;
+		position: relative;
+
+		.iarrow{
+			position: absolute;
+			top: 11px;
+			left: 0;
+			width: 8px;
+			height: 4px;
+			background: url(../images/icon_arrow_down.png) no-repeat left top;
+			background-size: 8px auto;
+			transition: all 300ms ease;
+		}
+
+		&.slide{
+			height: 26px;
+
+			.iarrow{
+				-webkit-transform: rotate(-180deg);
+			}
+
+			.iurl{
+				opacity: 1;
+			}
+		}
+
+		.workplace-title{
+			color: #999;
+			font-size: 12px;
+			padding-left: 12px;
+		}
+
+		strong{
+			font-weight: normal;
+		}
+
+		.iurl{
+			opacity: 0;
+			margin-left: 10px;
+			color: #ddd;
+			transition: opacity 300ms ease 200ms;
+		}
+	}
 
 }
+
+.add-workplace{
+	line-height: 26px;
+	border: 1px solid #fff;
+	outline: none;
+	padding: 2px 12px;
+	margin: 6px 0 0 11px;
+	font-size: 14px;
+	color: #fff;
+	box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+	background: #51BBF6;
+
+	&:active{
+		background: #35A5E4;
+	}
+}
+
 
 #updateConfig{
 	height: 36px;
 	width: 200px;
 	border: 1px solid #fff;
 	outline: none;
-	margin-left: 40px;
+	margin: 20px 0 20px 40px;
 	font-size: 16px;
 	color: #fff;
 	box-shadow: 2px 2px 6px rgba(0,0,0,0.3);

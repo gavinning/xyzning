@@ -50,11 +50,12 @@ function init(){
 				// for server
 				serverEnable	: false,
 				serverApi		: '',
-				serverPath		: '',
-				localPath		: '',
-				key				: '',
+				username		: '',
+				password		: '',
+				workplace		: [{server: '', local:''}],
 
 				// for less
+				lessEnable		: false,
 				defaultHome		: true,
 				defaultCompress	: true
 			}

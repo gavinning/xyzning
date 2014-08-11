@@ -269,7 +269,7 @@ page.extend({
 				var isLess = !!filename.match(/\.less$/);
 
 				// 编译less文件
-				if(isLess){
+				if(isLess && config.lessEnable){
 					// for less config
 					lessConfig.defaultHome = config.defaultHome;
 					lessConfig.defaultCompress = config.defaultCompress;
