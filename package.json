@@ -1,0 +1,57 @@
+{
+  "name": "xyzning",
+  "version": "0.0.2",
+  "description": "集成项目文件监听变更，上传测试服务器，less编译，图片压缩，base64转码等",
+  "main": "./src/views/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gavinning/xyzning.git"
+  },
+  "keywords": [
+    "xyzning",
+    "linco",
+    "linco.lab",
+    "nodejs",
+    "node-webkit"
+  ],
+  "dependencies": {
+    "linco.lab": "*",
+    "jade": "*",
+    "nedb": "0.10.6",
+    "request": "2.37.0",
+    "less": "1.7.3"
+  },
+  "author": {
+    "name": "gavinning"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gavinning/xyzning/issues"
+  },
+  "homepage": "https://github.com/gavinning/xyzning",
+  "readmeFilename": "Readme.md",
+  "window": {
+    "debug": false,
+    "title": "ilinco xyzning",
+    "icon": "icon/icon.png",
+    "toolbar": false,
+    "frame": true,
+    "width": 1030,
+    "height": 700,
+    "position": "center",
+    "min_width": 800,
+    "min_height": 600,
+    "show_in_taskbar": true
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "maintainers":[ {
+    "name": "gavinning",
+    "email": "admin@ilinco.com",
+    "web": "http://www.ilinco.com"
+  }]
+}

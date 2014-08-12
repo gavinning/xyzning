@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>xyzning</title>
+<meta name="author" content="gavinning" />
+<meta name="description" content="xyzning" />
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="../css/home.css" />
+</head>
+
+<body>
+<div id="page" class="page">
+	<header id="header" class="header">
+		<nav id="nav" class="nav">
+			<li class="item selected" hash="project">项目</li>
+			<li class="item" hash="config">配置</li>
+			<li class="item" hash="log">日志</li>
+			<li class="item" hash="css">Css</li>
+			<li class="item" hash="image">Images</li>
+			<li onclick="win.reloadDev()">刷新</li>
+			<li onclick="win.showDevTools()">开发工具</li>
+		</nav>
+	</header>
+	<div id="content" class="content"></div>
+	<footer id="footer" class="footer">
+		<div id="log" class="live-log"></div>
+	</footer>
+</div>
+<div id="global_tips"></div>
+<script src="../js/lib/jquery.min.js"></script>
+<script>
+// debug
+var win;
+var path = require('path');
+window.gui = require('nw.gui');
+// debug
+win = gui.Window.get();
+require(path.join(process.cwd(), 'src/js/init'))();
+</script>
+</body>
+</html>

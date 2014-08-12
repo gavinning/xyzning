@@ -11,21 +11,49 @@
 
 <body>
 <div id="page" class="page">
-	<header id="header">
-		<nav id="nav"></nav>
+	<header id="header" class="header">
+		<nav id="nav" class="nav">
+			<li class="disable"><a href="#less">Less</a></li>
+			<li>Css</li>
+			<li>Javascript</li>
+			<li><a href="#image">Image</a></li>
+		</nav>
 	</header>
 	<div id="content" class="content">
-		<aside id="aside">
-			
+		<aside id="aside" class="aside">
+			<div id="asideInner" class="inner">
+				<div id="listFolder" class="list-folder">
+					<ul></ul>
+				</div>
+			</div>
 		</aside>
 		<div id="main" class="main">
-			
-
+			<div id="mainInner" class="inner">
+				<div id="listImage" class="list-images">
+					<ul>
+					</ul>
+					<button id="getMoreImage" class="btn">查看更多</button>
+				</div>
+				<div id="imageRightAside">
+					<div id="imageListDrag" class="list-drag">
+						<ul>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	<footer id="footer"></footer>
+	<footer id="footer" class="footer">
+		<div id="tips1" class="tips"></div>
+		<div id="tips2" class="tips"></div>
+		<div id="tips3" class="tips"></div>
+	</footer>
 </div>
 <script src="js/lib/jquery.min.js"></script>
-<script src="js/page/home.js"></script>
+<script>
+var path = require('path');
+window.gui = require('nw.gui');
+require(path.resolve('./core/js/init'))();
+</script>
 </body>
 </html>

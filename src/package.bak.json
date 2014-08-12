@@ -1,17 +1,18 @@
 {
-	"name": "ilinco xyzning",
-	"main": "core/index.html",
+	"name": "xyzning",
+	"main": "views/index.html",
 	"description": "for web dev",
 	"version": "0.1.0",
 	"keywords": [ "ilinco", "linco", "xyzning" ],
 	"window": {
+		"debug": false,
 		"title": "ilinco xyzning",
 		"icon": "icon/icon.png",
 		"toolbar": false,
 		"frame": true,
-		"width": 1000,
+		"width": 1030,
 		"height": 700,
-		"position": "mouse",
+		"position": "center",
 		"min_width": 800,
 		"min_height": 600,
 		"show_in_taskbar": true
