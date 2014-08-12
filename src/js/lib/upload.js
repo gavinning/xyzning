@@ -80,12 +80,12 @@ function upload(file){
 
 	// 检查file路径合法性
 	if(!lib.isDir(file) && !lib.isFile(file)){
-		return console.log('Error: Illegal Path')
+		return app.log(['Error: Illegal Path', true])
 	}
 
 	// 检查工作目录
 	if(!isWorkplace(file)){
-		return console.log('Error: The folder is not workplace');
+		return app.log(['Error: The folder is not workplace', true])
 	}
 
 	handleFile(file)
