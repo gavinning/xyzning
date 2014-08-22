@@ -63,6 +63,7 @@ function init(){
 	}
 	// 缓存全局库
 	root.$ = window.$;
+	root.document = window.document;
 	// 读取全局配置信息
 	db.data.find({name: app.config.name}, function(e, docs){
 		if(e) return tips.show('数据库链接失败');
