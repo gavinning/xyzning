@@ -4,6 +4,7 @@
 
 var path = require('path');
 var lib = require('linco.lab').lib;
+var db = require('../db');
 var Page = require('../lib/page');
 var page = new Page;
 var datainfo = {};
@@ -28,12 +29,30 @@ page.extend({
 		var ap = new lib.parent();
 
 		ap.extend({
+			cb: function(){
+				return arguments[0] || function(){};
+			},
+
+			makeConfig: function(){
+				this.config = {
+					baseURL: 'http://www.ilinco.com/',
+					feedId: '#FeedContent',
+					nameCard: '#nameCard',
+					// 存储条件
+					maxCount: 1000,
+
+					sqlArr: [],
+					sqlHash: {},
+
+					newArr: [],
+					newHash: {}
+				}
+				this.frame = $('#appIframe').get(0);
+			},
+
 			makeQuery: function(id){
 				var doc, link, st, murl, commentId, linkId;
-
-				this.frame = $('#appIframe').get(0);
 				this.frame.src = murl + id;
-
 				this.frame.onload = function(){
 					doc = $(this.contentDocument).find(commentId).get(0)
 
@@ -58,20 +77,61 @@ page.extend({
 						}
 					}, 50)
 				}
+			},
+
+			// 拉取需处理的数据
+			getQueryNumber: function(callback){
+				callback = this.cb(callback);
+				db.find({query: 0}, function(e, docs){
+					if(e) return console.log(e.message)
+					callback(docs)
+				})
+			},
+
+			// 存储A阶段新数据
+			saveNewData: function(){
+				db.update({qid: id}, function(){
+					
+				})
+			},
+
+			// 更新已处理的数据
+			updateHandleData: function(){
+				
+			},
+
+			loop: function(){
+				this.makeConfig();
+
+
+			},
+
+			// 开启爬虫任务
+			beginLoop: function(){
+				
+			},
+
+			// 结束爬虫任务
+			endLoop: function(){
+				
+			},
+
+			// 暂停爬虫任务
+			pauseLoop: function(){
+				
+			},
+
+			// 统计
+			queryAll: function(){
+				
+			},
+
+			// 导出数据
+			exportData: function(){
+				
 			}
-		}),
 
-		get: function(){
-
-		},
-
-		start: function(){
-
-		},
-
-		end: function(){
-			
-		}
+		})
 
 		// ap.makeQuery();
 	}
