@@ -20,18 +20,22 @@ less.renderFile = function(file, compress, callback){
 		if(e) return callback(e);
 
 		parser.parse(data, function (e, tree) {
-			if(e) return callback(e);
-			var css = tree.toCSS({
-				// 压缩输出的CSS
-				compress: compress
-			});
-		
-			fs.writeFile(target, css, 'utf-8', function(e){
-				if(e) return console.log(e);
+			// 解决Mixin报错的会引起程序崩溃的bug
+			try{
+				if(e) return callback(e);
+				var css = tree.toCSS({
+					// 压缩输出的CSS
+					compress: compress
+				});
+			
+				fs.writeFile(target, css, 'utf-8', function(e){
+					if(e) return console.log(e);
 
-				callback(e, file, target);
-			})
-
+					callback(e, file, target);
+				})
+			}catch(e){
+				app.log([e.message + 'catche', true]);
+			}
 		});
 	})
 }
