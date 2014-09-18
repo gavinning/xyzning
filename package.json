@@ -37,7 +37,7 @@
     "debug": false,
     "title": "ilinco xyzning",
     "icon": "icon/icon.png",
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "width": 1030,
     "height": 700,
